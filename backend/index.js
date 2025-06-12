@@ -1,17 +1,16 @@
 const express = require('express');
 const cors = require('cors');
-const dbPool = require('./db'); // 引入我們的資料庫連線池
+const dbPool = require('./db');
 
 const app = express();
 
-// --- ⚠️ 最終、最完整的 CORS 設定 ---
+// --- ⚠️ 新的、更標準的 CORS 設定 ---
 // 建立一個允許的來源白名單
 const allowedOrigins = [
     'http://localhost:5173',                 // 允許本地開發的前端
     'https://survey-form-v4mz.onrender.com'  // 允許您部署在 Render 上的前端
 ];
 
-// 建立一個 CORS 選項物件
 const corsOptions = {
   origin: function (origin, callback) {
     // 檢查請求的來源是否在我們的白名單中
@@ -21,15 +20,10 @@ const corsOptions = {
     } else {
       callback(new Error('Not allowed by CORS')); // 拒絕請求
     }
-  },
-  methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS", // 明確允許的方法
-  credentials: true
+  }
 };
 
-// 在所有路由之前，特別處理 OPTIONS 預檢請求
-app.options('*', cors(corsOptions)); 
-
-// 為所有後續路由啟用我們自訂的 CORS 設定
+// 啟用 CORS - 這會自動處理 OPTIONS 預檢請求
 app.use(cors(corsOptions));
 
 // 讓 Express 能夠解析傳入請求的 JSON 格式的 body
@@ -152,7 +146,6 @@ app.post('/submit-form', async (req, res) => {
         res.status(200).json({ message: '問卷已成功儲存到資料庫！', respondentId: respondentId });
 
     } catch (error) {
-        // 如果連線存在，就復原交易
         if (client) {
             await client.query('ROLLBACK');
         }
@@ -164,7 +157,6 @@ app.post('/submit-form', async (req, res) => {
              res.status(500).json({ message: '伺服器錯誤，無法儲存問卷，請聯繫管理員。' });
         }
     } finally {
-        // 如果連線存在，就釋放回連線池
         if (client) {
             client.release();
         }
@@ -177,7 +169,6 @@ app.post('/submit-form', async (req, res) => {
  */
 const PORT = process.env.PORT || 10000; // Render 預設使用 10000 埠
 
-// 先執行資料庫初始化，成功後再啟動 Express 伺服器
 initializeDatabase().then(() => {
     app.listen(PORT, () => {
         console.log(`🚀 後端伺服器正在 http://localhost:${PORT} 上運行`);
