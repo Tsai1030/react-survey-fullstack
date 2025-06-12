@@ -3,9 +3,24 @@ const cors = require('cors');
 const dbPool = require('./db'); // 引入我們的資料庫連線池
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const allowedOrigins = [
+    'http://localhost:5173', // 允許本地開發的前端
+    'https://survey-form-v4mz.onrender.com' // 允許您部署在 Render 上的前端
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    // 如果請求的來源在我們的白名單中，或者請求沒有來源 (例如 Postman)，就允許
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+};
+
+app.use(cors(corsOptions)); // 使用我們自訂的選項
+app.use(express.json());
 /**
  * 初始化資料庫的函數
  * - 檢查核心資料表是否存在
