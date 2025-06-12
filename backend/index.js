@@ -1,13 +1,14 @@
 const express = require('express');
 const cors = require('cors'); // 我們仍然需要它來處理 OPTIONS 請求
+require('dotenv').config();
 const dbPool = require('./db');
 
 const app = express();
 
 // --- ⚠️ 終極、手動的 CORS 設定中介軟體 ---
 app.use((req, res, next) => {
-  // 您的前端部署網址
-  const allowedOrigin = 'https://survey-form-v4mz.onrender.com';
+  // 您的前端部署網址，可透過環境變數自訂
+  const allowedOrigin = process.env.ALLOWED_ORIGIN || 'https://survey-form-v4mz.onrender.com';
   
   // 為所有回應都強制加上這個標頭
   res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
