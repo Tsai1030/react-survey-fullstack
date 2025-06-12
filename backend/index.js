@@ -1,32 +1,36 @@
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors'); // 我們仍然需要它來處理 OPTIONS 請求
 const dbPool = require('./db');
 
 const app = express();
 
-// --- ⚠️ 新的、更標準的 CORS 設定 ---
-// 建立一個允許的來源白名單
-const allowedOrigins = [
-    'http://localhost:5173',                 // 允許本地開發的前端
-    'https://survey-form-v4mz.onrender.com'  // 允許您部署在 Render 上的前端
-];
+// --- ⚠️ 終極、手動的 CORS 設定中介軟體 ---
+app.use((req, res, next) => {
+  // 您的前端部署網址
+  const allowedOrigin = 'https://survey-form-v4mz.onrender.com';
+  
+  // 為所有回應都強制加上這個標頭
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  
+  // 允許的請求方法
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  
+  // 允許的請求標頭，特別是 Content-Type
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
+  
+  // 允許傳送 cookies (雖然目前沒用到，但加上無妨)
+  res.setHeader('Access-Control-Allow-Credentials', true);
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    // 檢查請求的來源是否在我們的白名單中
-    // !origin 的判斷是為了允許像 Postman 這種沒有來源的請求
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true); // 允許請求
-    } else {
-      callback(new Error('Not allowed by CORS')); // 拒絕請求
-    }
+  // 如果進來的請求是 OPTIONS (預檢請求)，我們就直接回傳 204 並結束，不讓它往下走
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
   }
-};
+  
+  // 如果不是 OPTIONS 請求，就讓它繼續往下一個中介軟體或路由處理器
+  next();
+});
 
-// 啟用 CORS - 這會自動處理 OPTIONS 預檢請求
-app.use(cors(corsOptions));
-
-// 讓 Express 能夠解析傳入請求的 JSON 格式的 body
+// 在 CORS 設定之後，才解析 JSON body
 app.use(express.json());
 
 
@@ -167,7 +171,7 @@ app.post('/submit-form', async (req, res) => {
 /**
  * 啟動伺服器
  */
-const PORT = process.env.PORT || 10000; // Render 預設使用 10000 埠
+const PORT = process.env.PORT || 10000;
 
 initializeDatabase().then(() => {
     app.listen(PORT, () => {
