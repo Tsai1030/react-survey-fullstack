@@ -213,8 +213,11 @@ export default function BlindTestForm() {
     e.preventDefault();
     setIsSubmitting(true);
     
+      /* === ① 這兩行是除錯用 === */
+    console.log("API ROOT =", import.meta.env.VITE_API_URL);   // ← 環境變數是否注入？
+    console.log("formData =", formData);                       // ← 送出的資料長怎樣？
     // API 端點保持不變
-    const API_ENDPOINT = 'https://a2a5-49-159-74-234.ngrok-free.app/submit-form';
+    const API_ENDPOINT = `${import.meta.env.VITE_API_URL}/submit-form`;
 
     try {
       const response = await axios.post(API_ENDPOINT, formData);
