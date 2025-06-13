@@ -7,13 +7,13 @@
 1. 複製環境設定檔
 
 ```bash
-cp .env.example .env
-cp backend/.env.example backend/.env
+cp form-frontend/.env.example form-frontend/.env
+cp form-backend/.env.example form-backend/.env
 ```
 
-2. 根據實際環境編輯 `.env` 與 `backend/.env`，設定 API URL、資料庫帳號等參數。
+2. 根據實際環境編輯 `.env` 與 `form-backend/.env`，設定 API URL、資料庫帳號等參數。
 
-   `backend/.env` 需提供 MySQL 連線資訊，例如：
+   `form-backend/.env` 需提供 MySQL 連線資訊，例如：
 
    ```bash
    DB_USER=myuser
@@ -26,14 +26,15 @@ cp backend/.env.example backend/.env
 3. 安裝依賴並啟動服務
 
 ```bash
+cd form-frontend
 npm install
 npm run dev
 ```
 
-後端在 `backend` 目錄下，可使用以下指令啟動：
+後端在 `form-backend` 目錄下，可使用以下指令啟動：
 
 ```bash
-cd backend
+cd form-backend
 npm install
 npm start
 ```
