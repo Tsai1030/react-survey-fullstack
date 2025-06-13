@@ -214,7 +214,8 @@ export default function BlindTestForm() {
     setIsSubmitting(true);
     
     // API 端點保持不變
-    const API_ENDPOINT = 'https://a2a5-49-159-74-234.ngrok-free.app/submit-form';
+    const API_ENDPOINT = 'https://react-survey-fullstack.onrender.com/submit-form';
+
 
     try {
       const response = await axios.post(API_ENDPOINT, formData);
