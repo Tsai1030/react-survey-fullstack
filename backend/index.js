@@ -14,14 +14,14 @@ app.post('/submit-form', async (req, res) => {
         return res.status(400).json({ message: '缺少必要的表單資料，請填寫完整。' });
     }
 
-    let connection;
+    let client;
     try {
-        connection = await dbPool.getConnection();
-        await connection.beginTransaction();
+        client = await dbPool.connect();
+        await client.query('BEGIN');
 
-        const respondentQuery = 'INSERT INTO respondents (name, gender, education) VALUES (?, ?, ?)';
-        const [respondentResult] = await connection.execute(respondentQuery, [name, gender, education]);
-        const respondentId = respondentResult.insertId;
+        const respondentQuery = 'INSERT INTO respondents (name, gender, education) VALUES ($1, $2, $3) RETURNING id';
+        const respondentResult = await client.query(respondentQuery, [name, gender, education]);
+        const respondentId = respondentResult.rows[0].id;
 
         console.log(`👨‍💻 已新增填寫者，ID: ${respondentId}`);
 
@@ -45,16 +45,16 @@ app.post('/submit-form', async (req, res) => {
                         const { accuracy, completeness, is_preferred } = answerData;
                         
                         // 在 SQL 語句和參數中加入 is_preferred
-                        const answerQuery = 'INSERT INTO answers (respondent_id, question_id, model_answer_index, accuracy, completeness, is_preferred) VALUES (?, ?, ?, ?, ?, ?)';
-                        
+                        const answerQuery = 'INSERT INTO answers (respondent_id, question_id, model_answer_index, accuracy, completeness, is_preferred) VALUES ($1, $2, $3, $4, $5, $6)';
+
                         answerPromises.push(
-                            connection.execute(answerQuery, [
+                            client.query(answerQuery, [
                                 respondentId,
                                 parseInt(questionId),
                                 parseInt(modelAnswerIndex),
                                 accuracy ? parseInt(accuracy) : null,
                                 completeness ? parseInt(completeness) : null,
-                                is_preferred === true ? 1 : 0, // 將布林值 true/false 轉換成 1/0
+                                is_preferred === true,
                             ])
                         );
                     }
@@ -68,15 +68,15 @@ app.post('/submit-form', async (req, res) => {
 
         await Promise.all(answerPromises);
         console.log(`📝 已新增 ${answerPromises.length} 筆回答到資料庫。`);
-        
-        await connection.commit();
+
+        await client.query('COMMIT');
         console.log('👍 交易已成功提交！');
 
         res.status(200).json({ message: '問卷已成功儲存到資料庫！', respondentId: respondentId });
 
     } catch (error) {
-        if (connection) {
-            await connection.rollback();
+        if (client) {
+            await client.query('ROLLBACK');
         }
         
         console.error('❌ 資料庫或驗證操作失敗:', error.message);
@@ -89,8 +89,8 @@ app.post('/submit-form', async (req, res) => {
         }
 
     } finally {
-        if (connection) {
-            connection.release();
+        if (client) {
+            client.release();
         }
     }
 });
