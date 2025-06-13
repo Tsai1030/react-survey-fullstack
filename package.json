@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "npx vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api": "uvicorn fastapi_backend.main:app --reload"
   },
   "dependencies": {
     "axios": "^1.9.0",
