@@ -39,52 +39,39 @@ app.use(express.json());
  * 初始化資料庫的函數
  */
 async function initializeDatabase() {
-    const client = await dbPool.connect();
+    const connection = await dbPool.getConnection();
     try {
-        const checkTableQuery = `SELECT to_regclass('public.respondents');`;
-        const res = await client.query(checkTableQuery);
-        
-        if (res.rows[0].to_regclass === null) {
-            console.log('📜 資料表 "respondents" 和 "answers" 不存在，正在自動建立...');
-            
-            const createRespondentsTable = `
-                CREATE TABLE respondents (
-                    id SERIAL PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    gender VARCHAR(10) NOT NULL,
-                    education VARCHAR(50) NOT NULL,
-                    submitted_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-                );
-            `;
-            await client.query(createRespondentsTable);
-            console.log('✅ 資料表 "respondents" 建立成功！');
-            
-            const createAnswersTable = `
-                CREATE TABLE answers (
-                    id SERIAL PRIMARY KEY,
-                    respondent_id INTEGER NOT NULL,
-                    question_id INTEGER NOT NULL,
-                    model_answer_index INTEGER NOT NULL,
-                    accuracy INTEGER,
-                    completeness INTEGER,
-                    is_preferred BOOLEAN DEFAULT FALSE,
-                    CONSTRAINT fk_respondent
-                        FOREIGN KEY(respondent_id) 
-                        REFERENCES respondents(id)
-                        ON DELETE CASCADE
-                );
-            `;
-            await client.query(createAnswersTable);
-            console.log('✅ 資料表 "answers" 建立成功！');
-            
-        } else {
-            console.log('👍 資料表已存在，無需建立。');
-        }
+        const createRespondentsTable = `
+            CREATE TABLE IF NOT EXISTS respondents (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                gender VARCHAR(10) NOT NULL,
+                education VARCHAR(50) NOT NULL,
+                submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `;
+        await connection.query(createRespondentsTable);
+
+        const createAnswersTable = `
+            CREATE TABLE IF NOT EXISTS answers (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                respondent_id INT NOT NULL,
+                question_id INT NOT NULL,
+                model_answer_index INT NOT NULL,
+                accuracy INT,
+                completeness INT,
+                is_preferred BOOLEAN DEFAULT FALSE,
+                CONSTRAINT fk_respondent FOREIGN KEY (respondent_id) REFERENCES respondents(id) ON DELETE CASCADE
+            );
+        `;
+        await connection.query(createAnswersTable);
+
+        console.log('✅ 資料表初始化完成！');
     } catch (err) {
         console.error('❌ 初始化資料庫失敗:', err);
-        process.exit(1); 
+        process.exit(1);
     } finally {
-        client.release();
+        connection.release();
     }
 }
 
@@ -99,13 +86,13 @@ app.post('/submit-form', async (req, res) => {
         return res.status(400).json({ message: '缺少必要的表單資料，請填寫完整。' });
     }
 
-    const client = await dbPool.connect();
+    const client = await dbPool.getConnection();
     try {
-        await client.query('BEGIN');
+        await client.beginTransaction();
 
-        const respondentQuery = 'INSERT INTO respondents (name, gender, education) VALUES ($1, $2, $3) RETURNING id';
-        const respondentResult = await client.query(respondentQuery, [name, gender, education]);
-        const respondentId = respondentResult.rows[0].id;
+        const respondentQuery = 'INSERT INTO respondents (name, gender, education) VALUES (?, ?, ?)';
+        const [respondentResult] = await client.query(respondentQuery, [name, gender, education]);
+        const respondentId = respondentResult.insertId;
 
         console.log(`👨‍💻 已新增填寫者，ID: ${respondentId}`);
 
@@ -122,7 +109,7 @@ app.post('/submit-form', async (req, res) => {
                             throw new Error(`問題 ${questionId} 的模型回答 ${parseInt(modelAnswerIndex) + 1} 缺少準確性評分。`);
                         }
                         const { accuracy, completeness, is_preferred } = answerData;
-                        const answerQuery = 'INSERT INTO answers (respondent_id, question_id, model_answer_index, accuracy, completeness, is_preferred) VALUES ($1, $2, $3, $4, $5, $6)';
+                        const answerQuery = 'INSERT INTO answers (respondent_id, question_id, model_answer_index, accuracy, completeness, is_preferred) VALUES (?, ?, ?, ?, ?, ?)';
                         answerPromises.push(
                             client.query(answerQuery, [
                                 respondentId,
@@ -144,15 +131,15 @@ app.post('/submit-form', async (req, res) => {
 
         await Promise.all(answerPromises);
         console.log(`📝 已新增 ${answerPromises.length} 筆回答到資料庫。`);
-        
-        await client.query('COMMIT');
+
+        await client.commit();
         console.log('👍 交易已成功提交！');
 
         res.status(200).json({ message: '問卷已成功儲存到資料庫！', respondentId: respondentId });
 
     } catch (error) {
         if (client) {
-            await client.query('ROLLBACK');
+            await client.rollback();
         }
         console.error('❌ 資料庫或驗證操作失敗:', error.message);
         
