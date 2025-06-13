@@ -12,14 +12,17 @@
 "C:\Users\user\Downloads\ngrok.exe" http 5173
 
 ### 2️⃣ 啟動後端服務
+
 cd "C:\Users\user\Desktop\vite-react-tailwind-template\backend"
 node index.js
 
 ### 3️⃣ 啟動前端服務
+
 cd "C:\Users\user\Desktop\vite-react-tailwind-template"
 npm run dev
 
 ### 4️⃣ 取得並設定 ngrok authtoken
+
 請先登入 ngrok 並取得你的 authtoken：
 👉 https://dashboard.ngrok.com/get-started/your-authtoken
 
@@ -27,9 +30,11 @@ npm run dev
 D:ngrok config add-authtoken
 
 ### 5️⃣ 單一通道：啟動後端用 ngrok
+
 ngrok http 5000
 
 ### 6️⃣ 雙通道設定與啟動（推薦）
+
 🔧 建立 .ngrok2/ngrok.yml 設定檔
 請在 C:\Users\user\.ngrok2 資料夾內建立 ngrok.yml 檔案，內容如下：
 # 請將 authtoken 換成您自己的 ngrok 金鑰
@@ -45,6 +50,7 @@ tunnels:
     proto: http
     addr: 5173
 ### ▶️ 啟動雙通道服務
+
 ngrok start --all
 
 
