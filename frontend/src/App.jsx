@@ -243,7 +243,15 @@ export default function BlindTestForm() {
     <div className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
       <form onSubmit={handleSubmit}>
         
-        {/* ===== 新增的問卷說明區塊開始 ===== */}
+        {/* ===== 主標題區塊 ===== */}
+        <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
+            <p className="text-gray-600 mt-2">
+                請依據每題所附的三段回答，評估其準確性與完整性。請勿根據語氣或風格判斷出處，務必專注於回答內容本身。
+            </p>
+        </div>
+
+        {/* ===== 問卷說明區塊 ===== */}
         <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
           <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
           <p className="text-gray-700 mb-3 leading-relaxed">
@@ -259,16 +267,9 @@ export default function BlindTestForm() {
             預計填答時間為 15 分鐘，調查結果將於一個月內彙整，並回饋參與者研究成果摘要。若有任何問題，歡迎與研究者聯繫。再次感謝您的參與！
           </p>
         </div>
-        {/* ===== 新增的問卷說明區塊結束 ===== */}
 
-        <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
-            <p className="text-gray-600 mt-2">
-                請依據每題所附的三段回答，評估其準確性與完整性。請勿根據語氣或風格判斷出處，務必專注於回答內容本身。
-            </p>
-        </div>
-
-        <div className="space-y-12 mt-10">
+        {/* ===== 基本資料與問卷題目開始 ===== */}
+        <div className="space-y-12">
             <div className="p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white">
                 <h2 className="text-xl font-bold mb-4 text-gray-800">
                     <span className="text-gray-600">基本資料</span>
