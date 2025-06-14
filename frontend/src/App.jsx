@@ -201,6 +201,7 @@ export default function BlindTestForm() {
       return { ...prev, answers: newAnswers };
     });
   };
+
   const handlePreferenceChange = (questionId, preferredAnswerIndex) => {
     // 先將該問題所有回答的 is_preferred 設為 false
     questions.find(q => q.id === questionId).answers.forEach((_, index) => {
@@ -209,13 +210,13 @@ export default function BlindTestForm() {
     // 再將被選擇的那個設為 true
     updateAnswer(questionId, preferredAnswerIndex, { is_preferred: true });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     // API 端點保持不變
     const API_ENDPOINT = 'https://react-survey-fullstack.onrender.com/submit-form';
-
 
     try {
       const response = await axios.post(API_ENDPOINT, formData);
@@ -241,6 +242,25 @@ export default function BlindTestForm() {
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
       <form onSubmit={handleSubmit}>
+        
+        {/* ===== 新增的問卷說明區塊開始 ===== */}
+        <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
+          <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
+          <p className="text-gray-700 mb-3 leading-relaxed">
+            歡迎您參與本研究問卷，感謝您撥冗協助！
+          </p>
+          <p className="text-gray-700 mb-3 leading-relaxed">
+            本問卷旨在評估三種不同人工智慧語言模型的回答品質。每一題會呈現同一個問題，搭配三個匿名模型（模型1、模型2、模型3）的回應。請您根據每段回答的內容，評估其準確性（3分制）與完整性（5分制），並於最後選出您認為表現最佳的模型。
+          </p>
+          <p className="text-gray-700 mb-3 leading-relaxed">
+            為確保評估的公平性與科學性，所有模型皆使用相同的提示語（Prompt），並隨機排序展示。問卷採盲測設計，不標示模型來源，填答結果僅用於學術分析，資料將完全匿名處理。
+          </p>
+          <p className="text-gray-700 leading-relaxed">
+            預計填答時間為 15 分鐘，調查結果將於一個月內彙整，並回饋參與者研究成果摘要。若有任何問題，歡迎與研究者聯繫。再次感謝您的參與！
+          </p>
+        </div>
+        {/* ===== 新增的問卷說明區塊結束 ===== */}
+
         <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
             <p className="text-gray-600 mt-2">
