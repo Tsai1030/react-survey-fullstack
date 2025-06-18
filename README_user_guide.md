@@ -84,7 +84,8 @@ DELETE FROM answers
 WHERE respondent_id IN (
   SELECT id FROM respondents WHERE name = 'jenjen02'
 );
-
+```
+```sql
 DELETE FROM respondents
 WHERE name = 'jenjen02';
 ```
