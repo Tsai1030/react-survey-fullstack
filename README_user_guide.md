@@ -95,7 +95,8 @@ WHERE name = 'jenjen02';
 ```sql
 -- 清空 answers
 DELETE FROM answers;
-
+```
+```sql
 -- 清空 respondents
 DELETE FROM respondents;
 ```
