@@ -55,6 +55,64 @@ FROM answers AS a
 LEFT JOIN respondents AS r ON a.respondent_id = r.id
 ORDER BY r.id, a.question_id;
 ```
+## ✅ 1. 刪除某位填寫者的所有回答（answers）
+
+```sql
+DELETE FROM answers
+WHERE respondent_id = 1;
+```
+👉 這會刪除所有 respondent_id 為 1 的回答資料。
+
+建議先查查看：
+
+```sql
+SELECT * FROM answers WHERE respondent_id = 1;
+```
+
+## ✅ 2. 刪除某位填寫者本身（respondents）
+
+```sql
+⚠️ 這一步應該在刪完他所有回答之後再做：
+DELETE FROM respondents
+WHERE id = 1;
+```
+
+## ✅ 3. 一次刪除某人資料（搭配子查詢）
+
+```sql
+DELETE FROM answers
+WHERE respondent_id IN (
+  SELECT id FROM respondents WHERE name = 'jenjen02'
+);
+
+DELETE FROM respondents
+WHERE name = 'jenjen02';
+```
+
+## ✅ 4. 清空整張表（練習用，請小心） 🔴這會刪掉所有資料，務必小心！
+
+```sql
+-- 清空 answers
+DELETE FROM answers;
+
+-- 清空 respondents
+DELETE FROM respondents;
+```
+## 🧪 建議操作方式：
+
+先用 SELECT 看你要刪的資料：
+
+```sql
+SELECT * FROM respondents WHERE name = 'jenjen02';
+```
+
+確認是你要刪的 → 再執行 DELETE：
+
+```sql
+DELETE FROM respondents WHERE name = 'jenjen02';
+```
+
+
 
 ---
 
