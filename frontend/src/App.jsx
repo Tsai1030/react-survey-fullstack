@@ -291,7 +291,7 @@ export default function BlindTestForm() {
                     </p>
                     <p className="text-gray-700 leading-relaxed">
                         研究生: 蔡承紘 <br />
-                        指導教授: 魏春望 <br />
+                        指導教授: 魏春旺 <br />
                         連絡電話: 0965-072-800
                     </p>
                 </div>
