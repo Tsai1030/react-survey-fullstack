@@ -7,10 +7,13 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/submit-form', async (req, res) => {
-    const { name, gender, education, answers } = req.body;
+    // --- 修改 1：接收新的欄位 ---
+    // 從 req.body 中解構出 identity, gender, submissionYear
+    const { identity, gender, submissionYear, answers } = req.body;
 
-    // 恢復嚴格的後端驗證
-    if (!name || !gender || !education || !answers || Object.keys(answers).length === 0) {
+    // --- 修改 2：更新後端驗證邏輯 ---
+    // 檢查新的欄位是否都存在
+    if (!identity || !gender || !submissionYear || !answers || Object.keys(answers).length === 0) {
         return res.status(400).json({ message: '缺少必要的表單資料，請填寫完整。' });
     }
 
@@ -19,16 +22,18 @@ app.post('/submit-form', async (req, res) => {
         client = await dbPool.connect();
         await client.query('BEGIN');
 
-        const respondentQuery = 'INSERT INTO respondents (name, gender, education) VALUES ($1, $2, $3) RETURNING id';
-        const respondentResult = await client.query(respondentQuery, [name, gender, education]);
+        // --- 修改 3：更新 SQL 語句和傳入的參數 ---
+        // 將 name, education 換成 identity, submission_year
+        const respondentQuery = 'INSERT INTO respondents (identity, gender, submission_year) VALUES ($1, $2, $3) RETURNING id';
+        const respondentResult = await client.query(respondentQuery, [identity, gender, submissionYear]);
         const respondentId = respondentResult.rows[0].id;
 
         console.log(`👨‍💻 已新增填寫者，ID: ${respondentId}`);
 
+        // (這個 answers 處理迴圈不需要變動，因為前端 answers 的結構沒變)
         const answerPromises = [];
         for (const questionId in answers) {
             if (Object.hasOwnProperty.call(answers, questionId)) {
-                // 檢查是否所有問題都有回答
                 if (!answers[questionId] || Object.keys(answers[questionId]).length === 0) {
                     throw new Error(`問題 ${questionId} 沒有提供回答。`);
                 }
@@ -36,15 +41,12 @@ app.post('/submit-form', async (req, res) => {
                     if (Object.hasOwnProperty.call(answers[questionId], modelAnswerIndex)) {
                         const answerData = answers[questionId][modelAnswerIndex];
                         
-                        // 檢查準確性是否都有填
                         if (!answerData || !answerData.accuracy) {
                             throw new Error(`問題 ${questionId} 的模型回答 ${parseInt(modelAnswerIndex) + 1} 缺少準確性評分。`);
                         }
 
-                        // 從 answerData 中解構出 is_preferred
                         const { accuracy, completeness, is_preferred } = answerData;
                         
-                        // 在 SQL 語句和參數中加入 is_preferred
                         const answerQuery = 'INSERT INTO answers (respondent_id, question_id, model_answer_index, accuracy, completeness, is_preferred) VALUES ($1, $2, $3, $4, $5, $6)';
 
                         answerPromises.push(
@@ -80,8 +82,6 @@ app.post('/submit-form', async (req, res) => {
         }
         
         console.error('❌ 資料庫或驗證操作失敗:', error.message);
-        // 如果是我們自訂的驗證錯誤，就回傳它的訊息
-        // 否則回傳通用的伺服器錯誤訊息
         if (error instanceof Error && res.statusCode < 500) {
              res.status(400).json({ message: error.message });
         } else {
