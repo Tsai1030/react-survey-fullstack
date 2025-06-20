@@ -1,18 +1,20 @@
 import React from "react";
 import { useState } from "react";
 import axios from 'axios';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
+// 輔助函數：用於建立初始的排序狀態
+const createInitialRankings = (questions) => {
+  const initialRankings = {};
+  questions.forEach(q => {
+    // 為每個問題創建一個預設排序 [0, 1, 2]，代表回答的原始順序
+    initialRankings[q.id] = q.answers.map((_, index) => index);
+  });
+  return initialRankings;
+};
+
 
 export default function BlindTestForm() {
-  // --- 第 1 處修改：更新 state 結構 ---
-  const [formData, setFormData] = useState({
-    identity: "", // 新增
-    gender: "",
-    participationYear: "",
-    llmFamiliarity: "",
-    answers: {},
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   // 完整的問卷題目資料 (保持不變)
   const questions = [
     {
@@ -179,56 +181,72 @@ export default function BlindTestForm() {
     },
   ];
 
+  // --- 狀態管理修改 ---
+  const [formData, setFormData] = useState({
+    identity: "",
+    gender: "",
+    participationYear: "",
+    llmFamiliarity: "",
+    // 將 `answers` 替換為 `rankings`，並直接初始化
+    rankings: createInitialRankings(questions),
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const updateAnswer = (questionId, answerIndex, newValues) => {
-    setFormData((prev) => {
-      const newAnswers = JSON.parse(JSON.stringify(prev.answers));
-      if (!newAnswers[questionId]) {
-        newAnswers[questionId] = {};
-      }
-      if (!newAnswers[questionId][answerIndex]) {
-        newAnswers[questionId][answerIndex] = {};
-      }
-      Object.assign(newAnswers[questionId][answerIndex], newValues);
-      return { ...prev, answers: newAnswers };
-    });
+  // --- 拖曳結束後的處理邏輯 ---
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
+
+    // 如果拖曳到無效區域或位置未改變，則不進行操作
+    if (!destination || (source.droppableId === destination.droppableId && source.index === destination.index)) {
+      return;
+    }
+
+    const questionId = source.droppableId;
+    const currentRanking = Array.from(formData.rankings[questionId]);
+    
+    // 重新排序
+    const [reorderedItem] = currentRanking.splice(source.index, 1);
+    currentRanking.splice(destination.index, 0, reorderedItem);
+
+    // 更新 state
+    setFormData(prev => ({
+      ...prev,
+      rankings: {
+        ...prev.rankings,
+        [questionId]: currentRanking,
+      },
+    }));
   };
 
-  const handlePreferenceChange = (questionId, preferredAnswerIndex) => {
-    questions.find(q => q.id === questionId).answers.forEach((_, index) => {
-      updateAnswer(questionId, index, { is_preferred: false });
-    });
-    updateAnswer(questionId, preferredAnswerIndex, { is_preferred: true });
-  };
-
-  // --- 第 2 處修改：更新 handleSubmit 函式 ---
+  // --- 提交表單的處理邏輯 ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // 建立要提交的資料，並自動加入年份
     const submissionData = {
       ...formData,
-      submissionYear: new Date().getFullYear(), // 自動記錄當前年份
+      submissionYear: new Date().getFullYear(),
     };
     
     const API_ENDPOINT = 'https://react-survey-fullstack.onrender.com/submit-form';
 
     try {
-      // 將包含年份的 submissionData 送出
       const response = await axios.post(API_ENDPOINT, submissionData);
       console.log('Server Response:', response.data);
       alert('問卷已成功提交！感謝您的填寫。');
       
-      // 更新表單重置的欄位
+      // 重置表單狀態
       setFormData({ 
         identity: "", 
         gender: "", 
-        answers: {} 
+        participationYear: "",
+        llmFamiliarity: "",
+        rankings: createInitialRankings(questions) 
       });
 
     } catch (error) {
@@ -246,240 +264,190 @@ export default function BlindTestForm() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
-      <form onSubmit={handleSubmit}>
-        
-        {/* ===== 主標題區塊 (保持不變) ===== */}
-        <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
-            <p className="text-gray-600 mt-2">
-                請依據每題所附的三段回答，評估其準確性與完整性。請勿根據語氣或風格判斷出處，務必專注於回答內容本身。
-            </p>
-        </div>
-
-        <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
-          <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
-          
-          {/* 第一段說明，結束後有 mb-3，所以會有空行 */}
-          <p className="text-gray-700 mb-3 leading-relaxed">
-            本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，從「正確性」與「完整性」面向，為三個答案進行評分。
-          </p>
-          
-          {/* 第二段說明，結束後有 mb-3，所以會有空行 */}
-          <p className="text-gray-700 mb-3 leading-relaxed">
-            我們誠摯邀請具USR實務經驗的您參與本研究。您的寶貴意見不僅有助於提升人工智慧在永續與社會責任領域的應用品質，更是對社會發展的一種具體貢獻。透過您的回饋，我們將能更準確地衡量AI生成內容的實用性，進而強化未來相關應用於公共議題的價值與效能。
-          </p>
-          
-          {/* 第三段說明，結束後有 mb-3，所以會有空行 */}
-          <p className="text-gray-700 mb-3 leading-relaxed">
-            本研究問卷僅供學術研究使用，所有資料將匿名處理，僅用於統計分析與研究報告撰寫，不會涉及個人隱私，亦不作其他用途。
-          </p>
-          
-          {/* 第四段感謝語，結束後有 mb-3，所以會有空行 */}
-          <p className="text-gray-700 mb-3 leading-relaxed">
-            預計填答時間為 15 分鐘，再次感謝您對本研究的支持與參與。
-          </p>
-          
-          {/* 聯絡資訊群組。這裡用 <br /> 來換行，所以三行之間沒有額外間距。 */}
-          {/* 這個 <p> 標籤本身沒有 mb-3，因為它是最後一個元素，下面不需要再有間距。 */}
-          <p className="text-gray-700 leading-relaxed">
-            研究生: 蔡承紘 <br />
-            指導教授: 魏春望 <br />
-            連絡電話: 0965-072-800
-          </p>
-        </div>
-
-
-        {/* --- 第 3 處修改：更新「基本資料」區塊的 JSX --- */}
-        <div className="space-y-12">
-            <div className="p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white">
-                <h2 className="text-xl font-bold mb-4 text-gray-800">
-                    <span className="text-gray-600">基本資料</span>
-                </h2>
-                <div className="space-y-6 bg-gray-50 p-6 rounded-md">
-                    <div>
-                        <label className="block font-semibold text-gray-700 mb-1">身分</label>
-                        <select
-                            name="identity"
-                            className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            required
-                            onChange={handleInputChange}
-                            value={formData.identity}
-                        >
-                            <option value="">請選擇</option>
-                            <option value="教師">教師</option>
-                            <option value="學生">學生</option>
-                            <option value="職員">職員</option>
-                            <option value="其他">其他</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block font-semibold text-gray-700 mb-1">生理性別</label>
-                        <select
-                            name="gender"
-                            className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            required
-                            onChange={handleInputChange}
-                            value={formData.gender}
-                        >
-                            <option value="">請選擇</option>
-                            <option value="男">男</option>
-                            <option value="女">女</option>
-                            <option value="其他">其他</option>
-                        </select>
-                    </div>
-                    <div>
-                      <label className="block font-semibold text-gray-700 mb-1">參與時間（年）</label>
-                      <select
-                        name="participationYear"
-                        className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required
-                        onChange={handleInputChange}
-                        value={formData.participationYear}
-                      >
-                        <option value="">請選擇</option>
-                        {[...Array(10)].map((_, i) => (
-                          <option key={i + 1} value={i + 1}>{i + 1} 年</option>
-                        ))}
-                      </select>
-                    </div>
-                    {/* LLM 熟悉度調查題目區塊 */}
-                    <div className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white mb-10">
-                      <h2 className="text-xl font-bold text-gray-800 mb-4">您對大型語言模型技術的熟悉程度為：</h2>
-                      <p className="text-gray-700 mb-4">
-                        請選擇您對於如 ChatGPT 等大型語言模型技術的熟悉程度（1 = 完全不熟悉，7 = 非常熟悉）
-                      </p>
-                      <div className="flex justify-between space-x-2">
-                        {[1, 2, 3, 4, 5, 6, 7].map((val) => (
-                          <label key={val} className="flex flex-col items-center cursor-pointer">
-                            <input
-                              type="radio"
-                              name="llmFamiliarity"
-                              value={val}
-                              className="h-5 w-5 text-purple-600"
-                              onChange={handleInputChange}
-                              checked={formData.llmFamiliarity === String(val)}
-                              required
-                            />
-                            <span className="mt-1 text-sm text-gray-700">{val}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                    {/* 姓名和學歷欄位已移除 */}
+    <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
+            <form onSubmit={handleSubmit}>
+                
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
+                    <p className="text-gray-600 mt-2">
+                        請依據每題所附的三段回答，將您認為最優的回答拖曳至第一位進行排序。
+                    </p>
                 </div>
-            </div>
 
-            {/* 問卷題目區塊 (保持不變) */}
-            {questions.map((q, qIndex) => (
-                <div key={q.id} className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white">
-                    {/* ▼▼▼ 這裡就是修改的重點 ▼▼▼ */}
-                    <div className="mb-4"> {/* 使用一個外層 div 來控制與下方內容的間距 */}
-                        <h2 className="text-xl font-bold text-gray-800">
-                            <span className="text-blue-600">第 {qIndex + 1} 題</span>
+                <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
+                    <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
+                    <p className="text-gray-700 mb-3 leading-relaxed">
+                        本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，**將三個答案拖曳排序，最優的回答排在第一位**。
+                    </p>
+                    <p className="text-gray-700 mb-3 leading-relaxed">
+                        我們誠摯邀請具USR實務經驗的您參與本研究。您的寶貴意見不僅有助於提升人工智慧在永續與社會責任領域的應用品質，更是對社會發展的一種具體貢獻。
+                    </p>
+                    <p className="text-gray-700 mb-3 leading-relaxed">
+                        本研究問卷僅供學術研究使用，所有資料將匿名處理，僅用於統計分析與研究報告撰寫，不會涉及個人隱私，亦不作其他用途。
+                    </p>
+                    <p className="text-gray-700 mb-3 leading-relaxed">
+                        預計填答時間為 10-15 分鐘，再次感謝您對本研究的支持與參與。
+                    </p>
+                    <p className="text-gray-700 leading-relaxed">
+                        研究生: 蔡承紘 <br />
+                        指導教授: 魏春望 <br />
+                        連絡電話: 0965-072-800
+                    </p>
+                </div>
+
+                <div className="space-y-12">
+                    <div className="p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white">
+                        <h2 className="text-xl font-bold mb-4 text-gray-800">
+                            <span className="text-gray-600">基本資料</span>
                         </h2>
-                        
-                        {/* 使用 Flexbox 容器來對齊圖示和問題文字 */}
-                        <div className="flex items-start gap-x-2 mt-1"> {/* 改用 mt-1 或 mt-2 控制與題號的間距 */}
-                            {/* 1. 圖示區塊 */}
-                            <span className="text-xl flex-shrink-0">📖</span>
-                            
-                            {/* 2. 文字區塊 */}
-                            <p className="text-xl font-bold text-gray-800">
-                                {q.question}
-                            </p>
+                        <div className="space-y-6 bg-gray-50 p-6 rounded-md">
+                            <div>
+                                <label className="block font-semibold text-gray-700 mb-1">身分</label>
+                                <select
+                                    name="identity"
+                                    className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                    onChange={handleInputChange}
+                                    value={formData.identity}
+                                >
+                                    <option value="">請選擇</option>
+                                    <option value="教師">教師</option>
+                                    <option value="學生">學生</option>
+                                    <option value="職員">職員</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block font-semibold text-gray-700 mb-1">生理性別</label>
+                                <select
+                                    name="gender"
+                                    className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                    onChange={handleInputChange}
+                                    value={formData.gender}
+                                >
+                                    <option value="">請選擇</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div>
+                              <label className="block font-semibold text-gray-700 mb-1">參與時間（年）</label>
+                              <select
+                                name="participationYear"
+                                className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                required
+                                onChange={handleInputChange}
+                                value={formData.participationYear}
+                              >
+                                <option value="">請選擇</option>
+                                {[...Array(10)].map((_, i) => (
+                                  <option key={i + 1} value={i + 1}>{i + 1} 年</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white mb-10">
+                              <h2 className="text-xl font-bold text-gray-800 mb-4">您對大型語言模型技術的熟悉程度為：</h2>
+                              <p className="text-gray-700 mb-4">
+                                請選擇您對於如 ChatGPT 等大型語言模型技術的熟悉程度（1 = 完全不熟悉，7 = 非常熟悉）
+                              </p>
+                              <div className="flex justify-between space-x-2">
+                                {[1, 2, 3, 4, 5, 6, 7].map((val) => (
+                                  <label key={val} className="flex flex-col items-center cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name="llmFamiliarity"
+                                      value={val}
+                                      className="h-5 w-5 text-purple-600"
+                                      onChange={handleInputChange}
+                                      checked={formData.llmFamiliarity === String(val)}
+                                      required
+                                    />
+                                    <span className="mt-1 text-sm text-gray-700">{val}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            </div>
                         </div>
                     </div>
-                    {/* ▲▲▲ 修改結束 ▲▲▲ */}
-                  
-                    <div className="space-y-6">
-                        {q.answers.map((a, idx) => (
-                            <div key={idx} className="p-4 border border-gray-200 rounded-md bg-gray-50">
-                                <p className="font-semibold text-gray-700 mb-2">模型回答 {idx + 1}</p>
-                                <p className="text-gray-800 mb-4 whitespace-pre-wrap leading-relaxed">{a}</p>
 
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block font-medium text-sm text-gray-600 mb-1">回答 {idx + 1} 的準確性（Accuracy）</label>
-                                        <select
-                                            className="border border-gray-300 p-2 w-full rounded-md bg-white"
-                                            required
-                                            value={formData.answers[q.id]?.[idx]?.accuracy || ''}
-                                            onChange={(e) => {
-                                              const newAccuracy = e.target.value;
-                                              const updates = { accuracy: newAccuracy };
-                                              if (newAccuracy !== '3') {
-                                                  updates.completeness = ''; // 清空完整性
-                                              }
-                                              updateAnswer(q.id, idx, updates);
-                                            }}
-                                        >
-                                            <option value="">請選擇</option>
-                                            <option value="1">1 = 明顯錯誤或誤導</option>
-                                            <option value="2">2 = 部分錯誤但仍有資訊價值</option>
-                                            <option value="3">3 = 完全正確或僅有微小偏差</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block font-medium text-sm text-gray-600 mb-1">回答 {idx + 1} 的完整性（Completeness）<span className="text-red-500">※ 僅當準確性為3時評估</span></label>
-                                        <select
-                                          className="border border-gray-300 p-2 w-full rounded-md bg-white disabled:bg-gray-200 disabled:cursor-not-allowed"
-                                          disabled={formData.answers[q.id]?.[idx]?.accuracy !== '3'}
-                                          value={formData.answers[q.id]?.[idx]?.completeness || ''}
-                                          onChange={(e) => updateAnswer(q.id, idx, { completeness: e.target.value })}
-                                        >
-                                            <option value="">請選擇</option>
-                                            <option value="1">1 = 僅提及部分重點</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3 = 普通完整</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5 = 涵蓋所有關鍵資訊</option>
-                                        </select>
-                                    </div>
+                    {/* --- 問卷題目區塊：改為拖曳排序 --- */}
+                    {questions.map((q, qIndex) => (
+                        <div key={q.id} className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white">
+                            <div className="mb-4">
+                                <h2 className="text-xl font-bold text-gray-800">
+                                    <span className="text-blue-600">第 {qIndex + 1} 題</span>
+                                </h2>
+                                <div className="flex items-start gap-x-2 mt-1">
+                                    <span className="text-xl flex-shrink-0">📖</span>
+                                    <p className="text-xl font-bold text-gray-800">
+                                        {q.question}
+                                    </p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                     <div className="mt-8 pt-6 border-t border-dashed border-gray-300">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                            綜合考量後，您最偏好第 {qIndex + 1} 題的哪個模型回答？
-                        </h3>
-                        <div className="space-y-2">
-                            {q.answers.map((_, idx) => (
-                                <label key={idx} className="flex items-center p-3 rounded-md hover:bg-blue-50 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name={`preference-q${q.id}`}
-                                        required
-                                        className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                        onChange={() => handlePreferenceChange(q.id, idx)}
-                                    />
-                                    <span className="ml-3 text-md font-medium text-gray-700">
-                                        模型回答 {idx + 1}
-                                    </span>
-                                </label>
-                            ))}
+                          
+                            <div className="mt-6 pt-6 border-t border-dashed border-gray-300">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                                    請拖曳下方的回答進行排序 (第一名在最上方)
+                                </h3>
+                                
+                                <Droppable droppableId={String(q.id)}>
+                                    {(provided) => (
+                                    <div
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                        className="space-y-4"
+                                    >
+                                        {formData.rankings[q.id]?.map((answerIndex, rankIndex) => (
+                                        <Draggable key={`${q.id}-${answerIndex}`} draggableId={`${q.id}-${answerIndex}`} index={rankIndex}>
+                                            {(provided, snapshot) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className={`p-4 border rounded-lg flex items-start gap-x-4 transition-shadow ${snapshot.isDragging ? 'shadow-2xl bg-blue-50' : 'bg-gray-50 shadow-sm'}`}
+                                            >
+                                                <div className="flex-shrink-0 flex flex-col items-center justify-center w-20">
+                                                    <span className="text-lg font-bold text-blue-600">第 {rankIndex + 1} 名</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400 mt-2 cursor-grab" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                                                    </svg>
+                                                </div>
+                                                <div className="flex-grow border-l border-gray-200 pl-4">
+                                                    <p className="font-semibold text-gray-700 mb-2">模型回答 {answerIndex + 1}</p>
+                                                    <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                                                        {q.answers[answerIndex]}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            )}
+                                        </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                    )}
+                                </Droppable>
+                            </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            ))}
+                
+                <div className="mt-10 text-center">
+                    <button 
+                        type="submit" 
+                        className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? '提交中...' : '提交問卷'}
+                    </button>
+                    <p className="mt-4 text-sm text-gray-500">
+                        由於伺服器免費方案限制，初次提交可能需要約 30-50 秒喚醒後端服務，請耐心等候，感謝您的理解！
+                    </p>
+                </div>
+            </form>
         </div>
-        
-        <div className="mt-10 text-center">
-            <button 
-                type="submit" 
-                className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
-            >
-                {isSubmitting ? '提交中...' : '提交問卷'}
-            </button>
-            {/* ▼▼▼ 新增的提示文字 ▼▼▼ */}
-            <p className="mt-4 text-sm text-gray-500">
-                由於伺服器免費方案限制，初次提交可能需要約 30-50 秒喚醒後端服務，請耐心等候，感謝您的理解！
-            </p>
-        </div>
-      </form>
-    </div>
+    </DragDropContext>
   );
 }
