@@ -37,114 +37,125 @@ https://form-frontend-u3x9.onrender.com/
 
 ## 📄 常用 SQL 查詢語法
 
-### ✅ ✨版本一：精簡欄位（僅保留分析需要）
-📌 用途：適合用於準備 RAG 評估統計資料，不追蹤個人、不考慮時間。
+### ✅ ✨最主要查詢個模型排名總表
 
 ```sql
-SELECT  
-  r.identity,
-  r.gender,
-  a.question_id,
-  a.model_answer_index,
-  a.accuracy,
-  a.completeness,
-  a.is_preferred
-FROM answers AS a
-LEFT JOIN respondents AS r ON a.respondent_id = r.id
-ORDER BY r.id, a.question_id, a.model_answer_index;
+-- 將下面的「1」換成您想分析的問題 ID
+SELECT 
+    question_id,
+    model_answer_index + 1 AS "模型回答",
+    COUNT(CASE WHEN rank = 1 THEN 1 END) AS "被評為第一名的次數",
+    COUNT(CASE WHEN rank = 2 THEN 1 END) AS "被評為第二名的次數",
+    COUNT(CASE WHEN rank = 3 THEN 1 END) AS "被評為第三名的次數"
+FROM 
+    rankings
+WHERE 
+    question_id = [請填入你想查詢的問題ID]  -- <--- 在這裡修改問題 ID
+GROUP BY 
+    question_id, model_answer_index
+ORDER BY 
+    "模型回答";
 ```
-## ✅ 🧪版本三：保留 respondent_id（可做群組分析）
-📌 用途：若你想計算「每個人偏好哪個模型的比例」、「個人評分差異」，保留 respondent_id 是必要的。
+## ✅ 🧪使用id查詢
 
 ```sql
-SELECT  
-  r.id AS respondent_id,
-  r.identity,
-  r.gender,
-  a.question_id,
-  a.model_answer_index,
-  a.accuracy,
-  a.completeness,
-  a.is_preferred
-FROM answers AS a
-LEFT JOIN respondents AS r ON a.respondent_id = r.id
-ORDER BY r.id, a.question_id, a.model_answer_index;
+-- ▼▼▼ 在這裡修改 ID ▼▼▼
+SELECT 
+    r.id AS "填答者ID",
+    r.identity AS "身分",
+    r.gender AS "性別",
+    k.question_id AS "問題ID",
+    k.model_answer_index + 1 AS "模型回答",
+    k.rank AS "名次"
+FROM 
+    respondents r
+JOIN 
+    rankings k ON r.id = k.respondent_id
+WHERE 
+    r.id = [請填入你想查詢的填答者ID]  -- 例如： r.id = 2
+ORDER BY 
+    k.question_id, k.rank;
 
 ```
-👉 這會刪除所有 respondent_id 為 1 的回答資料。
 
-建議先查查看：
+## ✅ 所有問題的「排名分佈」與「加權分數」統計 
 
 ```sql
-SELECT * FROM answers WHERE respondent_id = 1;
+WITH ScoredRankings AS (
+    SELECT
+        question_id,
+        model_answer_index,
+        -- 給予加權分數：第1名得3分，第2名得2分，第3名得1分
+        CASE 
+            WHEN rank = 1 THEN 3
+            WHEN rank = 2 THEN 2
+            WHEN rank = 3 THEN 1
+            ELSE 0 
+        END AS score
+    FROM 
+        rankings
+)
+SELECT 
+    s.question_id AS "問題ID",
+    s.model_answer_index + 1 AS "模型回答",
+    -- 計算各名次的總票數
+    COUNT(CASE WHEN r.rank = 1 THEN 1 END) AS "第一名票數",
+    COUNT(CASE WHEN r.rank = 2 THEN 1 END) AS "第二名票數",
+    COUNT(CASE WHEN r.rank = 3 THEN 1 END) AS "第三名票數",
+    -- 計算加權分數
+    SUM(s.score) AS "加權總分",
+    ROUND(AVG(s.score), 2) AS "平均分數"
+FROM 
+    ScoredRankings s
+JOIN 
+    rankings r ON s.question_id = r.question_id AND s.model_answer_index = r.model_answer_index
+GROUP BY 
+    s.question_id, s.model_answer_index
+ORDER BY 
+    "問題ID" ASC, "平均分數" DESC;
 ```
 
-## ✅ 2. 刪除某位填寫者本身（respondents）
+## ✅ 所有原始排序紀錄 (Raw Data)
 
 ```sql
-⚠️ 這一步應該在刪完他所有回答之後再做：
+SELECT 
+    r.id AS "填答者ID",
+    r.identity AS "身分",
+    r.gender AS "性別",
+    r.participation_year AS "參與年資",
+    r.llm_familiarity AS "LLM熟悉度",
+    k.question_id AS "問題ID",
+    k.model_answer_index + 1 AS "模型回答",
+    k.rank AS "名次",
+    r.created_at AS "填答時間"
+FROM 
+    respondents r
+JOIN 
+    rankings k ON r.id = k.respondent_id
+ORDER BY 
+    r.id, k.question_id, k.rank;
+```
+
+## ✅ 請複製以下語法，並將 [請填入你想刪除的填答者ID] 換成您要刪除的數字。
+
+```sql
+-- ▼▼▼ 在這裡修改要刪除的 ID ▼▼▼
 DELETE FROM respondents
-WHERE id = 1;
+WHERE id = [請填入你想刪除的填答者ID];  -- 例如： id = 3
 ```
 
-## ✅ 3. 一次刪除某人資料（搭配子查詢）
+## ✅ TRUNCATE 可以一次清空多張有關聯的表。RESTART IDENTITY 會讓下一次新增資料的 id 從 1 重新開始。CASCADE 則會一併清空所有與 respondents 表有關聯的表（也就是 rankings 表）。
+
+-- 這個指令會同時清空 respondents 和 rankings 兩張表的所有資料
+-- 並且將 ID 計數器重設為 1
 
 ```sql
-DELETE FROM answers
-WHERE respondent_id IN (
-  SELECT id FROM respondents WHERE name = 'jenjen02'
-);
-```
-```sql
-DELETE FROM respondents
-WHERE name = 'jenjen02';
-```
-
-## ✅ 4. 清空整張表（練習用，請小心） 🔴這會刪掉所有資料，務必小心！
-
-```sql
--- 清空 answers
-DELETE FROM answers;
-```
-```sql
--- 清空 respondents
-DELETE FROM respondents;
-```
-## 🧪 建議操作方式：
-
-✅ 1. 刪除特定 ID 的資料
-📌 表示：刪除 respondents 表中 id 為 7 的那筆紀錄
-
-```sql
-DELETE FROM respondents
-WHERE id = 7;
-```
-✅ 2. 刪除所有 identity = '學生' 的填寫者
-
-```sql
-DELETE FROM respondents
-WHERE identity = '學生';
-
-```
-## ✅ 4. 刪除整張表（⚠️會刪掉全部資料，慎用）安全地同時清空兩個表
-```sql
-TRUNCATE TABLE answers, respondents RESTART IDENTITY CASCADE;
+TRUNCATE TABLE respondents RESTART IDENTITY CASCADE;
 ```
 這會：
 - 清空資料
 - 把自動編號（id）重設回 1
   
-## 🧯 安全建議
-🔐 永遠搭配 WHERE 子句 使用 DELETE，除非你確定要清空整張表
-
-🧪 先用 SELECT 測試條件：
-```sql
-SELECT * FROM respondents WHERE identity = '學生';
-```
-再執行：
-```sql
-DELETE FROM respondents WHERE identity = '學生';
-```
 ---
 
 ## 📤 匯出為 CSV 的建議設定（DBeaver）
