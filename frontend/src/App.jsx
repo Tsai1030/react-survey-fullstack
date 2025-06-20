@@ -317,10 +317,25 @@ export default function BlindTestForm() {
             {/* 問卷題目區塊 (保持不變) */}
             {questions.map((q, qIndex) => (
                 <div key={q.id} className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white">
-                    <h2 className="text-xl font-bold mb-4 text-gray-800">
-                        <span className="text-blue-600">第 {qIndex + 1} 題</span><br/>
-                        📖 {q.question}
-                    </h2>
+                    {/* ▼▼▼ 這裡就是修改的重點 ▼▼▼ */}
+                    <div className="mb-4"> {/* 使用一個外層 div 來控制與下方內容的間距 */}
+                        <h2 className="text-xl font-bold text-gray-800">
+                            <span className="text-blue-600">第 {qIndex + 1} 題</span>
+                        </h2>
+                        
+                        {/* 使用 Flexbox 容器來對齊圖示和問題文字 */}
+                        <div className="flex items-start gap-x-2 mt-1"> {/* 改用 mt-1 或 mt-2 控制與題號的間距 */}
+                            {/* 1. 圖示區塊 */}
+                            <span className="text-xl flex-shrink-0">📖</span>
+                            
+                            {/* 2. 文字區塊 */}
+                            <p className="text-xl font-bold text-gray-800">
+                                {q.question}
+                            </p>
+                        </div>
+                    </div>
+                    {/* ▲▲▲ 修改結束 ▲▲▲ */}
+                  
                     <div className="space-y-6">
                         {q.answers.map((a, idx) => (
                             <div key={idx} className="p-4 border border-gray-200 rounded-md bg-gray-50">
