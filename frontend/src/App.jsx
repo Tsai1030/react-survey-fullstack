@@ -7,7 +7,8 @@ export default function BlindTestForm() {
   const [formData, setFormData] = useState({
     identity: "", // 新增
     gender: "",
-    // name 和 education 已移除
+    participationYear: "",
+    llmFamiliarity: "",
     answers: {},
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -256,22 +257,38 @@ export default function BlindTestForm() {
             </p>
         </div>
 
-        {/* ===== 問卷說明區塊 (保持不變) ===== */}
         <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
           <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
+          
+          {/* 第一段說明，結束後有 mb-3，所以會有空行 */}
           <p className="text-gray-700 mb-3 leading-relaxed">
-            歡迎您參與本研究問卷，感謝您撥冗協助！
+            本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，從「正確性」與「完整性」面向，為三個答案進行評分。
           </p>
+          
+          {/* 第二段說明，結束後有 mb-3，所以會有空行 */}
           <p className="text-gray-700 mb-3 leading-relaxed">
-            本問卷旨在評估三種不同人工智慧語言模型的回答品質。每一題會呈現同一個問題，搭配三個匿名模型（模型1、模型2、模型3）的回應。請您根據每段回答的內容，評估其準確性（3分制）與完整性（5分制），並於最後選出您認為表現最佳的模型。
+            我們誠摯邀請具USR實務經驗的您參與本研究。您的寶貴意見不僅有助於提升人工智慧在永續與社會責任領域的應用品質，更是對社會發展的一種具體貢獻。透過您的回饋，我們將能更準確地衡量AI生成內容的實用性，進而強化未來相關應用於公共議題的價值與效能。
           </p>
+          
+          {/* 第三段說明，結束後有 mb-3，所以會有空行 */}
           <p className="text-gray-700 mb-3 leading-relaxed">
-            為確保評估的公平性與科學性，所有模型皆使用相同的提示語（Prompt），並隨機排序展示。問卷採盲測設計，不標示模型來源，填答結果僅用於學術分析，資料將完全匿名處理。
+            本研究問卷僅供學術研究使用，所有資料將匿名處理，僅用於統計分析與研究報告撰寫，不會涉及個人隱私，亦不作其他用途。
           </p>
+          
+          {/* 第四段感謝語，結束後有 mb-3，所以會有空行 */}
+          <p className="text-gray-700 mb-3 leading-relaxed">
+            預計填答時間為 15 分鐘，再次感謝您對本研究的支持與參與。
+          </p>
+          
+          {/* 聯絡資訊群組。這裡用 <br /> 來換行，所以三行之間沒有額外間距。 */}
+          {/* 這個 <p> 標籤本身沒有 mb-3，因為它是最後一個元素，下面不需要再有間距。 */}
           <p className="text-gray-700 leading-relaxed">
-            預計填答時間為 15 分鐘，調查結果將於一個月內彙整，並回饋參與者研究成果摘要。若有任何問題，歡迎與研究者聯繫。再次感謝您的參與！
+            研究生: 蔡承紘 <br />
+            指導教授: 魏春望 <br />
+            連絡電話: 0965-072-800
           </p>
         </div>
+
 
         {/* --- 第 3 處修改：更新「基本資料」區塊的 JSX --- */}
         <div className="space-y-12">
@@ -293,10 +310,11 @@ export default function BlindTestForm() {
                             <option value="教師">教師</option>
                             <option value="學生">學生</option>
                             <option value="職員">職員</option>
+                            <option value="其他">其他</option>
                         </select>
                     </div>
                     <div>
-                        <label className="block font-semibold text-gray-700 mb-1">性別</label>
+                        <label className="block font-semibold text-gray-700 mb-1">生理性別</label>
                         <select
                             name="gender"
                             className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -309,6 +327,44 @@ export default function BlindTestForm() {
                             <option value="女">女</option>
                             <option value="其他">其他</option>
                         </select>
+                    </div>
+                    <div>
+                      <label className="block font-semibold text-gray-700 mb-1">參與時間（年）</label>
+                      <select
+                        name="participationYear"
+                        className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required
+                        onChange={handleInputChange}
+                        value={formData.participationYear}
+                      >
+                        <option value="">請選擇</option>
+                        {[...Array(10)].map((_, i) => (
+                          <option key={i + 1} value={i + 1}>{i + 1} 年</option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* LLM 熟悉度調查題目區塊 */}
+                    <div className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white mb-10">
+                      <h2 className="text-xl font-bold text-gray-800 mb-4">您對大型語言模型技術的熟悉程度為：</h2>
+                      <p className="text-gray-700 mb-4">
+                        請選擇您對於如 ChatGPT 等大型語言模型技術的熟悉程度（1 = 完全不熟悉，7 = 非常熟悉）
+                      </p>
+                      <div className="flex justify-between space-x-2">
+                        {[1, 2, 3, 4, 5, 6, 7].map((val) => (
+                          <label key={val} className="flex flex-col items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="llmFamiliarity"
+                              value={val}
+                              className="h-5 w-5 text-purple-600"
+                              onChange={handleInputChange}
+                              checked={formData.llmFamiliarity === String(val)}
+                              required
+                            />
+                            <span className="mt-1 text-sm text-gray-700">{val}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
                     {/* 姓名和學歷欄位已移除 */}
                 </div>
