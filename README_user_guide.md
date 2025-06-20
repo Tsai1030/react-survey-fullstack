@@ -126,9 +126,9 @@ DELETE FROM respondents
 WHERE identity = '學生';
 
 ```
-## ✅ 4. 刪除整張表（⚠️會刪掉全部資料，慎用）
+## ✅ 4. 刪除整張表（⚠️會刪掉全部資料，慎用）安全地同時清空兩個表
 ```sql
-TRUNCATE TABLE respondents RESTART IDENTITY;
+TRUNCATE TABLE answers, respondents RESTART IDENTITY CASCADE;
 ```
 這會：
 - 清空資料
