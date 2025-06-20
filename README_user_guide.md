@@ -41,19 +41,20 @@ https://form-frontend-u3x9.onrender.com/
 
 ```sql
 SELECT  
-  r.name,
+  r.identity,          -- << 修改: 從 r.name 改為 r.identity
   r.gender,
-  r.education,
+  r.submission_year,   -- << 修改: 從 r.education 改為 r.submission_year
   a.id AS answer_id,
   a.question_id,
   a.model_answer_index,
   a.accuracy,
   a.completeness,
+  a.is_preferred,      -- << 建議新增: 查詢是否為偏好答案
   r.id AS respondent_id,
   r.created_at AS submitted_at
 FROM answers AS a
 LEFT JOIN respondents AS r ON a.respondent_id = r.id
-ORDER BY r.id, a.question_id;
+ORDER BY r.id, a.question_id, a.model_answer_index;
 ```
 ## ✅ 1. 刪除某位填寫者的所有回答（answers）
 
