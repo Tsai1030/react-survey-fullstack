@@ -9,13 +9,16 @@ app.use(express.json());
 app.post('/submit-form', async (req, res) => {
     // --- 修改 1：接收新的欄位 ---
     // 從 req.body 中解構出 identity, gender, submissionYear
-    const { identity, gender, submissionYear, answers } = req.body;
+    const { identity, gender, submissionYear, participationYear, llmFamiliarity, answers } = req.body;
+
+
 
     // --- 修改 2：更新後端驗證邏輯 ---
     // 檢查新的欄位是否都存在
-    if (!identity || !gender || !submissionYear || !answers || Object.keys(answers).length === 0) {
+    if (!identity || !gender || !submissionYear || !participationYear || !llmFamiliarity || !answers || Object.keys(answers).length === 0) {
         return res.status(400).json({ message: '缺少必要的表單資料，請填寫完整。' });
     }
+
 
     let client;
     try {
@@ -24,8 +27,8 @@ app.post('/submit-form', async (req, res) => {
 
         // --- 修改 3：更新 SQL 語句和傳入的參數 ---
         // 將 name, education 換成 identity, submission_year
-        const respondentQuery = 'INSERT INTO respondents (identity, gender, submission_year) VALUES ($1, $2, $3) RETURNING id';
-        const respondentResult = await client.query(respondentQuery, [identity, gender, submissionYear]);
+        const respondentQuery = 'INSERT INTO respondents (identity, gender, submission_year, participation_year, llm_familiarity) VALUES ($1, $2, $3) RETURNING id';
+        const respondentResult = await client.query(respondentQuery, [identity, gender, submissionYear, participationYear, new Date().getFullYear(), parseInt(llmFamiliarity)]);
         const respondentId = respondentResult.rows[0].id;
 
         console.log(`👨‍💻 已新增填寫者，ID: ${respondentId}`);
