@@ -27,7 +27,7 @@ app.post('/submit-form', async (req, res) => {
 
         // --- 修改 3：更新 SQL 語句和傳入的參數 ---
         // 將 name, education 換成 identity, submission_year
-        const respondentQuery = 'INSERT INTO respondents (identity, gender, submission_year, participation_year, llm_familiarity) VALUES ($1, $2, $3) RETURNING id';
+        const respondentQuery = 'INSERT INTO respondents (identity, gender, submission_year, participation_year, llm_familiarity) VALUES ($1, $2, $3, $4, $5) RETURNING id';
         const respondentResult = await client.query(respondentQuery, [identity, gender, submissionYear, participationYear, new Date().getFullYear(), parseInt(llmFamiliarity)]);
         const respondentId = respondentResult.rows[0].id;
 
