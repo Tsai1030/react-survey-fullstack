@@ -146,8 +146,8 @@ WHERE id = [請填入你想刪除的填答者ID];  -- 例如： id = 3
 
 ## ✅ TRUNCATE 可以一次清空多張有關聯的表。RESTART IDENTITY 會讓下一次新增資料的 id 從 1 重新開始。CASCADE 則會一併清空所有與 respondents 表有關聯的表（也就是 rankings 表）。
 
--- 這個指令會同時清空 respondents 和 rankings 兩張表的所有資料
--- 並且將 ID 計數器重設為 1
+- 這個指令會同時清空 respondents 和 rankings 兩張表的所有資料
+- 並且將 ID 計數器重設為 1
 
 ```sql
 TRUNCATE TABLE respondents RESTART IDENTITY CASCADE;
