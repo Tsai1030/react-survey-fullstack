@@ -37,30 +37,39 @@ https://form-frontend-u3x9.onrender.com/
 
 ## 📄 常用 SQL 查詢語法
 
-### 查詢所有填寫者及其對每題模型回答的評分與偏好
+### ✅ ✨版本一：精簡欄位（僅保留分析需要）
+📌 用途：適合用於準備 RAG 評估統計資料，不追蹤個人、不考慮時間。
 
 ```sql
 SELECT  
-  r.identity,          -- << 修改: 從 r.name 改為 r.identity
+  r.identity,
   r.gender,
-  r.submission_year,   -- << 修改: 從 r.education 改為 r.submission_year
-  a.id AS answer_id,
   a.question_id,
   a.model_answer_index,
   a.accuracy,
   a.completeness,
-  a.is_preferred,      -- << 建議新增: 查詢是否為偏好答案
-  r.id AS respondent_id,
-  r.created_at AS submitted_at
+  a.is_preferred
 FROM answers AS a
 LEFT JOIN respondents AS r ON a.respondent_id = r.id
 ORDER BY r.id, a.question_id, a.model_answer_index;
 ```
-## ✅ 1. 刪除某位填寫者的所有回答（answers）
+## ✅ 🧪版本三：保留 respondent_id（可做群組分析）
+📌 用途：若你想計算「每個人偏好哪個模型的比例」、「個人評分差異」，保留 respondent_id 是必要的。
 
 ```sql
-DELETE FROM answers
-WHERE respondent_id = 1;
+SELECT  
+  r.id AS respondent_id,
+  r.identity,
+  r.gender,
+  a.question_id,
+  a.model_answer_index,
+  a.accuracy,
+  a.completeness,
+  a.is_preferred
+FROM answers AS a
+LEFT JOIN respondents AS r ON a.respondent_id = r.id
+ORDER BY r.id, a.question_id, a.model_answer_index;
+
 ```
 👉 這會刪除所有 respondent_id 為 1 的回答資料。
 
@@ -103,20 +112,39 @@ DELETE FROM respondents;
 ```
 ## 🧪 建議操作方式：
 
-先用 SELECT 看你要刪的資料：
+✅ 1. 刪除特定 ID 的資料
+📌 表示：刪除 respondents 表中 id 為 7 的那筆紀錄
 
 ```sql
-SELECT * FROM respondents WHERE name = 'jenjen02';
+DELETE FROM respondents
+WHERE id = 7;
 ```
-
-確認是你要刪的 → 再執行 DELETE：
+✅ 2. 刪除所有 identity = '學生' 的填寫者
 
 ```sql
-DELETE FROM respondents WHERE name = 'jenjen02';
+DELETE FROM respondents
+WHERE identity = '學生';
+
 ```
+## ✅ 4. 刪除整張表（⚠️會刪掉全部資料，慎用）
+```sql
+DELETE FROM respondents;
+```
+這會：
+- 清空資料
+- 把自動編號（id）重設回 1
+  
+## 🧯 安全建議
+🔐 永遠搭配 WHERE 子句 使用 DELETE，除非你確定要清空整張表
 
-
-
+🧪 先用 SELECT 測試條件：
+```sql
+SELECT * FROM respondents WHERE identity = '學生';
+```
+再執行：
+```sql
+DELETE FROM respondents WHERE identity = '學生';
+```
 ---
 
 ## 📤 匯出為 CSV 的建議設定（DBeaver）
