@@ -128,7 +128,7 @@ WHERE identity = '學生';
 ```
 ## ✅ 4. 刪除整張表（⚠️會刪掉全部資料，慎用）
 ```sql
-DELETE FROM respondents;
+TRUNCATE TABLE respondents RESTART IDENTITY;
 ```
 這會：
 - 清空資料
