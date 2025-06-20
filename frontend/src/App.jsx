@@ -403,6 +403,10 @@ export default function BlindTestForm() {
             >
                 {isSubmitting ? '提交中...' : '提交問卷'}
             </button>
+            {/* ▼▼▼ 新增的提示文字 ▼▼▼ */}
+            <p className="mt-4 text-sm text-gray-500">
+                由於伺服器免費方案限制，初次提交可能需要約 30-50 秒喚醒後端服務，請耐心等候，感謝您的理解！
+            </p>
         </div>
       </form>
     </div>
