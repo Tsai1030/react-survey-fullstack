@@ -278,7 +278,7 @@ export default function BlindTestForm() {
                 <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
                     <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
                     <p className="text-gray-700 mb-3 leading-relaxed">
-                        本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，**將三個答案拖曳排序，最優的回答排在第一位**。
+                        本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，<span className="text-red-600 font-bold">將三個答案拖曳排序，最優的回答排在第一位</span>。
                     </p>
                     <p className="text-gray-700 mb-3 leading-relaxed">
                         我們誠摯邀請具USR實務經驗的您參與本研究。您的寶貴意見不僅有助於提升人工智慧在永續與社會責任領域的應用品質，更是對社會發展的一種具體貢獻。
