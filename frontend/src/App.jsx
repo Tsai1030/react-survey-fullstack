@@ -48,7 +48,7 @@ export default function BlindTestForm() {
       answers: [
         "高雄醫學大學空氣污染USR計畫中的學分學程，課程設計強調跨院系及跨校合作，旨在促進學生學習成效。此學程的設計基礎是跨領域知識融合，結合環境科學、公共衛生及醫療照護等多個領域，推動共授與實地實習 ，讓學生獲得全方位實作經驗。 透過跨校聯合課程與專題研討，師生得以加強學術合作與互動，擴大學術影響力，並有效促進不同院校間的資源共享與知識交流。 此外，課程設計也結合理論與實務，並納入實地調研和企業實習，更注重解決實際問題的能力培養，提升學生學習成效。",
         "高雄醫學大學空氣污染USR計畫中的跨院系／跨校課程設計可促進學生多元視角學習，強化對空污議題的理解與實踐能力，提升其跨領域協作與問題解決能力。",
-        "高雄醫學大學空氣污染USR計畫的「空氣汙染與健康微學程」等跨院系／跨校課程設計，透過整合公共衛生、呼吸治療、運動醫學等多元專業知識，並連結高中端學生參與「School Tutor跨域共學聯盟」，讓學生從理論到實踐多面向學習空污議題。這不僅深化了學生對空污健康影響的理解，也透過實際衛教活動培養其解決問題、團隊合作與社會關懷能力，顯著提升學習成效與應用知能。",
+        "高雄醫學大學空氣污染USR計畫的「空氣汙染與健康微學程」等跨院系／跨校課程設計，透過整合公共衛生、呼吸治療、運動醫學等多元專業知識，並連結高中端學生參與「School Tutor跨域共學聯盟」，讓學生從理論到實踐多面向學習空污議題。這不僅深化了學生對空污健康影響的理解，也透過實際衛教活動培養其解決問題、團隊合作與社会關懷能力，顯著提升學習成效與應用知能。",
       ],
     },
     {
@@ -165,14 +165,14 @@ export default function BlindTestForm() {
         answers: [
             "高雄醫學大學USR空氣汙染計畫透過多種方式普及健康促進與環境保護理念，包含課程設置、宣傳活動及公眾講座，強化民眾對空污與健康的關聯認識。計畫亦利用GIS平台整合空污數據，並研發新的學習成效量表，提升小學空汙課綱的學習成效。此外，透過工作坊、研習及School Tutor跨域共學聯盟等活動，進一步推動環境教育與健康促進理念。 計畫滾動式增修太平國小課綱，並與成功大學結合GIS運用於太平國小課程中，計畫預計每年辦理工作坊研習至少兩場，並設計國中小學空氣污健康識能教材。透過數位化工具提升師生互動，採用在線討論、虛擬實境和互動教學軟件，並透過現場踏查和互動體驗，讓學生親自觀察空污現象。為強化民眾環境意識與健康福祉，計畫同時推展高年級課綱學習成效評估計畫。 要設計結合空污即時資料與健康建議的數位互動工具，可參考計畫中GIS平台整合空污數據的經驗，即時更新顯示空污指標，並提供使用者個人化的健康建議。透過互動教學軟件，使工具更具吸引力，並整合虛擬實境，加強民眾對空污影響的理解，提升學習效果與參與感。",
             "我設計的數位互動工具為「空污即時健康助手」，結合環境部API提供的即時空氣品質資料與個人健康狀態輸入（如年齡、呼吸疾病史），即時推播個別化防護建議與行動提醒，並整合教育素材如動畫或語音說明，提升使用者對空污與健康關聯的理解與反應能力。",
-            "目前無法直接存取最新的USR計畫細節或其數位教材應用經驗，因此無法精準根據USR計畫的具體經驗設計數位互動工具。然而，根據一般數位教材應用原則，若要設計一個結合空污即時資料與健康建議的數位互動工具，可以考慮開發一個響應式網頁或行動應用程式，即時串接環保署的空污監測API，呈現PM2.5、PM10等數據及AQI指數。同時，系統可根據空污等級，自動顯示對應的健康防護建議，例如「敏感族群減少戶外活動」、「配戴口罩」或「開啟空氣清淨機」，並可結合地理位置服務，提供使用者所在地的即時資訊與個人化建議。",
+            "目前無法直接存取最新的USR計畫細節或其數位教材應用經驗，因此無法精準根據USR計畫的具體經驗設計數位互動工具。然而，根據一般數位教材應用原則，若要設計一個結合空污即時資料與健康建議的數位互動工具，可以考慮開發一個響應式網頁或行動應用程式，即時串接環保署的空污監測API，呈現PM2.5、PM10等數據及AQI指数。同時，系統可根據空污等級，自動顯示對應的健康防護建議，例如「敏感族群減少戶外活動」、「配戴口罩」或「開啟空氣清淨機」，並可結合地理位置服務，提供使用者所在地的即時資訊與個人化建議。",
         ],
     },
     {
         id: 18,
         question: "依照高醫空汙USR計畫中已有的資源（如：智慧肺健康 App、肺健康圖卡、多語繪本、社區培力坊、跨校合作等），請設計一項三年期的創新行動方案，用於提升高風險社區居民在空氣污染下的健康素養與自我防護能力。",
         answers: [
-            "高醫大空氣污染USR計畫已整合多項資源，可發展三年期創新行動方案，著重於強化高風險居民的健康素養。此方案將運用智慧肺健康App，結合多語繪本及肺健康圖卡，提供個人化健康監控與衛教資訊，降低語言與年齡層造成的理解障礙。透過社區培力坊、現場踏查及跨校合作，建立更深入的社區連結，並針對高齡者、新住民等弱勢族群提供客製化健康介入方案。 行動方案初期，聚焦於App使用者教育及圖卡繪本的普及，提升居民對空污影響及自我防護意識。中期則強化社區培力坊及現場踏查的頻率與深度，與地方政府、企業合作監測環境數據，並針對空污嚴重區域居民提供室內空氣清淨技術應用。後期將鼓勵跨領域師生共同設計更具互動性的衛教工具，並結合國中健康學園，培養年輕世代的環保意識。 此方案的核心是跨校科研力量的整合，加速智慧健康產品與應用的研發，例如結合GIS、大數據提供更精準的健康預警。同時，鼓勵師生運用創新工作坊，開發實用的桌遊與互動教材，並強化國中健康學園的課程實踐，提升年輕世代的參與度與健康素養。 整個三年期行動方案以居民參與為核心，透過多樣化的資源整合與科技應用，期能有效提升高風險社區居民在 空氣污染下的健康素養與自我防護能力，建立更健康、永續的社區環境。",
+            "高醫大空氣污染USR計畫已整合多項資源，可發展三年期創新行動方案，著重於強化高風險居民的健康素養。此方案將運用智慧肺健康App，結合多語繪本及肺健康圖卡，提供個人化健康監控與衛教資訊，降低語言與年齡層造成的理解障礙。透過社區培力坊、現場踏查及跨校合作，建立更深入的社區連結，並針對高齡者、新住民等弱勢族群提供客製化健康介入方案。 行動方案初期，聚焦於App使用者教育及圖卡繪本的普及，提升居民對空污影響及自我防護意識。中期則強化社區培力坊及現場踏查的頻率與深度，與地方政府、企業合作監測環境數據，並針對空污嚴重区域居民提供室內空氣清淨技術應用。後期將鼓勵跨領域師生共同設計更具互動性的衛教工具，並結合國中健康學園，培養年輕世代的環保意識。 此方案的核心是跨校科研力量的整合，加速智慧健康產品與應用的研發，例如結合GIS、大數據提供更精準的健康預警。同時，鼓勵師生運用創新工作坊，開發實用的桌遊與互動教材，並強化國中健康學園的課程實踐，提升年輕世代的參與度與健康素養。 整個三年期行動方案以居民參與為核心，透過多樣化的資源整合與科技應用，期能有效提升高風險社區居民在 空氣污染下的健康素養與自我防護能力，建立更健康、永續的社區環境。",
             "我設計的三年期創新行動方案為「智慧肺共學社區計畫」，第一年以智慧肺App與多語教材進行基礎衛教與數位識能推廣，第二年透過社區培力坊導入實作課程與居民共學小組，第三年結合跨校資源辦理行動健康檢測與成果展，逐步提升高風險社區居民對空污的理解、預防行為與健康管理能力。",
             "根據高醫大空氣污染 USR 計畫現有資源，一項三年期創新行動方案可聚焦於「智慧空污健康管家」計畫。第一年，運用智慧肺健康App與多語繪本推廣基礎知識，並透過社區培力坊進行志工培訓，建立種子教師網絡。第二年，將肺健康圖卡融入社區據點活動，強化高風險族群的互動式學習，同時深化跨校合作，拓展監測網絡與資源整合。第三年，著重於行動方案成效評估與模式優化，開發進階App功能，如個人化暴露風險評估與即時防護建議，並將成功經驗推廣至其他高風險社區，形成永續的自我防護社群。此方案將整合數位科技與社區參與，提升居民健康素養與實際應對空污的能力。",
         ],
@@ -189,7 +189,8 @@ export default function BlindTestForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // *** 新增：用於控制分頁的 state ***
+  // *** 新增：用於控制頁面流程的 state ***
+  const [currentStep, setCurrentStep] = useState('info'); // 'info' 或 'questions'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const handleInputChange = (e) => {
@@ -216,23 +217,46 @@ export default function BlindTestForm() {
     }));
   };
   
-  // *** 新增：處理換頁的函式 ***
-  const handleNext = () => {
+  // *** 新增：處理從基本資料頁到問題頁的函式 ***
+  const handleStartAnswering = () => {
+    // 驗證所有基本資料欄位
+    if (!formData.identity || !formData.gender || !formData.participationYear || !formData.llmFamiliarity) {
+      alert("請確實填寫所有基本資料欄位！");
+      return; // 如果有未填項，中斷函式
+    }
+    // 驗證通過，切換到問題頁面
+    setCurrentStep('questions');
+    window.scrollTo(0, 0);
+  };
+
+  const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
-      window.scrollTo(0, 0); // *** 新增：換頁時滾動到頁面頂部 ***
+      window.scrollTo(0, 0);
     }
   };
-  const handlePrev = () => {
+  const handlePrevQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
-      window.scrollTo(0, 0); // *** 新增：換頁時滾動到頁面頂部 ***
+      window.scrollTo(0, 0);
     }
   };
 
   // --- 提交表單的處理邏輯 (保持不變) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // 再次驗證以防萬一，雖然理論上走不到這一步
+    if (!formData.identity || !formData.gender || !formData.participationYear || !formData.llmFamiliarity) {
+      alert("請填寫所有的基本資料欄位後再提交！");
+      return; 
+    }
+
+    const isConfirmed = window.confirm("您確定要提交問卷嗎？提交後將無法修改。");
+    if (!isConfirmed) {
+      return;
+    }
+
     setIsSubmitting(true);
     const submissionData = {
       ...formData,
@@ -250,8 +274,9 @@ export default function BlindTestForm() {
         llmFamiliarity: "",
         rankings: createInitialRankings(questions) 
       });
-      setCurrentQuestionIndex(0); // 提交後回到第一頁
-      window.scrollTo(0, 0); // *** 新增：提交後滾動到頁面頂部 ***
+      setCurrentQuestionIndex(0);
+      setCurrentStep('info'); // 提交後回到基本資料頁
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error('提交失敗:', error);
       if (error.response) {
@@ -270,234 +295,243 @@ export default function BlindTestForm() {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    // DragDropContext 必須在最外層
     <DragDropContext onDragEnd={handleDragEnd}>
-        {/* RWD 修改：在手機上使用較小的 p-4，在 sm (640px) 以上的螢幕才用 p-6 */}
         <div className="p-4 sm:p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
             <form onSubmit={handleSubmit}>
                 
                 <div className="text-center mb-8">
-                    {/* RWD 修改：手機上字體 text-2xl，大螢幕 text-3xl */}
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
                     <p className="text-gray-600 mt-2">
                         請依據每題所附的三段回答，將您認為最優的回答進行排序1-3名。
                     </p>
                 </div>
 
-                <div className="mb-10 p-4 sm:p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
-                    {/* RWD 修改：手機上字體 text-xl，大螢幕 text-2xl */}
-                    <h2 className="text-xl sm:text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
-                    <p className="text-gray-700 mb-3 leading-relaxed">
-                        本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，<span className="text-red-600 font-bold">將三個答案以拖曳的方法進行排名順序</span>。
-                    </p>
-                    <p className="text-gray-700 mb-3 leading-relaxed">
-                        我們誠摯邀請具USR實務經驗的您參與本研究。您的寶貴意見不僅有助於提升人工智慧在永續與社會責任領域的應用品質，更是對社會發展的一種具體貢獻。
-                    </p>
-                    <p className="text-gray-700 mb-3 leading-relaxed">
-                        本研究問卷僅供學術研究使用，所有資料將匿名處理，僅用於統計分析與研究報告撰寫，不會涉及個人隱私，亦不作其他用途。
-                    </p>
-                    <p className="text-gray-700 mb-3 leading-relaxed">
-                        總題數18題，預計填答時間為 10-15 分鐘，再次感謝您對本研究的支持與參與。
-                    </p>
-                    <p className="text-gray-700 leading-relaxed">
-                        研究生: 蔡承紘 <br />
-                        指導教授: 魏春旺 <br />
-                        連絡電話: 0965-072-800
-                    </p>
-                </div>
-                
-                {/* 基本資料區塊，這裡設定為總是顯示 */}
-                <div className="p-4 sm:p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white mb-12">
-                    <h2 className="text-xl font-bold mb-4 text-gray-800">
-                        <span className="text-gray-600">基本資料</span>
-                    </h2>
-                    <div className="space-y-6 bg-gray-50 p-4 sm:p-6 rounded-md">
-                        <div>
-                            <label className="block font-semibold text-gray-700 mb-1">身分</label>
-                            <select
-                                name="identity"
-                                className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                required
-                                onChange={handleInputChange}
-                                value={formData.identity}
-                            >
-                                <option value="">請選擇</option>
-                                <option value="教師">教師</option>
-                                <option value="學生">學生</option>
-                                <option value="職員">職員</option>
-                                <option value="其他">其他</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block font-semibold text-gray-700 mb-1">生理性別</label>
-                            <select
-                                name="gender"
-                                className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                required
-                                onChange={handleInputChange}
-                                value={formData.gender}
-                            >
-                                <option value="">請選擇</option>
-                                <option value="男">男</option>
-                                <option value="女">女</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block font-semibold text-gray-700 mb-1">參與時間（年）</label>
-                            <select
-                            name="participationYear"
-                            className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            required
-                            onChange={handleInputChange}
-                            value={formData.participationYear}
-                            >
-                            <option value="">請選擇</option>
-                            {[...Array(10)].map((_, i) => (
-                                <option key={i + 1} value={i + 1}>{i + 1} 年</option>
-                            ))}
-                            </select>
-                        </div>
-                        <div>
-                            <h3 className="block font-semibold text-gray-700 mb-2">您對大型語言模型技術的熟悉程度為：</h3>
-                            <p className="text-sm text-gray-600 mb-3">
-                            請選擇您對於如 ChatGPT 等大型語言模型技術的熟悉程度（1 = 完全不熟悉，7 = 非常熟悉）
-                            </p>
-                            {/* RWD 修改：這是主要修改點。使用 flex-wrap 讓按鈕在手機上可以換行，並用 gap 取代 space-x */}
-                            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 bg-white p-3 rounded-lg border">
-                            {[1, 2, 3, 4, 5, 6, 7].map((val) => (
-                                <label key={val} className="flex flex-col items-center cursor-pointer p-1 rounded-md hover:bg-gray-100 flex-grow">
-                                <span className="text-sm text-gray-700 font-medium">{val}</span>
-                                <input
-                                    type="radio"
-                                    name="llmFamiliarity"
-                                    value={val}
-                                    className="h-5 w-5 mt-1 text-purple-600 focus:ring-purple-500"
-                                    onChange={handleInputChange}
-                                    checked={formData.llmFamiliarity === String(val)}
-                                    required
-                                />
-                                </label>
-                            ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {/* ============================================= */}
+                {/* =========== 頁面條件渲染區塊開始 =========== */}
+                {/* ============================================= */}
 
-                {/* --- 分頁後的問卷題目區塊 --- */}
-                {/* RWD 修改：加上 key 來觸發動畫，並調整內外邊距 */}
-                <div 
-                  key={currentQuestion.id}
-                  className="p-4 sm:p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white animate-fade-in"
-                >
-                    {/* *** 進度條 *** */}
-                    <div className="mb-6">
-                        <p className="text-right text-sm font-semibold text-gray-600">
-                            進度: {currentQuestionIndex + 1} / {questions.length}
+                {/* ---------- 步驟一：基本資料頁 ---------- */}
+                {currentStep === 'info' && (
+                  <div className="animate-fade-in">
+                    <div className="mb-10 p-4 sm:p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
+                        <h2 className="text-xl sm:text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
+                        <p className="text-gray-700 mb-3 leading-relaxed">
+                            本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，<span className="text-red-600 font-bold">將三個答案以拖曳的方法進行排名順序</span>。
                         </p>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-                            <div 
-                                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
-                                style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-                            ></div>
-                        </div>
-                    </div>
-
-                    <div className="mb-4">
-                        {/* RWD 修改：手機上字體 text-lg，大螢幕 text-xl */}
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-800">
-                            <span className="text-blue-600">第 {currentQuestionIndex + 1} 題</span>
-                        </h2>
-                        <div className="flex items-start gap-x-3 mt-1">
-                            <span className="text-lg sm:text-xl flex-shrink-0 pt-1">📖</span>
-                            <p className="text-lg sm:text-xl font-bold text-gray-800">
-                                {currentQuestion.question}
-                            </p>
-                        </div>
+                        <p className="text-gray-700 mb-3 leading-relaxed">
+                            我們誠摯邀請具USR實務經驗的您參與本研究。您的寶貴意見不僅有助於提升人工智慧在永續與社會責任領域的應用品質，更是對社會發展的一種具體貢獻。
+                        </p>
+                        <p className="text-gray-700 mb-3 leading-relaxed">
+                            本研究問卷僅供學術研究使用，所有資料將匿名處理，僅用於統計分析與研究報告撰寫，不會涉及個人隱私，亦不作其他用途。
+                        </p>
+                        <p className="text-gray-700 mb-3 leading-relaxed">
+                            總題數18題，預計填答時間為 10-15 分鐘，再次感謝您對本研究的支持與參與。
+                        </p>
+                        <p className="text-gray-700 leading-relaxed">
+                            研究生: 蔡承紘 <br />
+                            指導教授: 魏春旺 <br />
+                            連絡電話: 0965-072-800
+                        </p>
                     </div>
                     
-                    <div className="mt-6 pt-6 border-t border-dashed border-gray-300">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                            請拖曳下方的回答方塊進行排序 (第一名在最上方)
-                        </h3>
-                        
-                        <Droppable droppableId={String(currentQuestion.id)}>
-                            {(provided) => (
-                            <div
-                                {...provided.droppableProps}
-                                ref={provided.innerRef}
-                                className="space-y-4"
-                            >
-                                {formData.rankings[currentQuestion.id]?.map((answerIndex, rankIndex) => (
-                                <Draggable key={`${currentQuestion.id}-${answerIndex}`} draggableId={`${currentQuestion.id}-${answerIndex}`} index={rankIndex}>
-                                    {(provided, snapshot) => (
-                                    // RWD 修改：這是第二個主要修改點。預設是 flex-col (上下堆疊)，在 sm 以上螢幕變為 flex-row (左右並排)
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        className={`border rounded-lg flex flex-col sm:flex-row items-stretch transition-shadow ${snapshot.isDragging ? 'shadow-2xl bg-blue-50' : 'bg-gray-50 shadow-sm'}`}
-                                    >
-                                        {/* RWD 修改：名次區塊。在手機上與拖曳圖示左右並排，在大螢幕上則上下堆疊 */}
-                                        <div className="flex-shrink-0 w-full sm:w-20 flex flex-row sm:flex-col items-center justify-between sm:justify-center p-3 sm:p-4 bg-gray-100 sm:bg-transparent rounded-t-lg sm:rounded-l-lg sm:rounded-t-none">
-                                            <span className="text-lg font-bold text-blue-600">第 {rankIndex + 1} 名</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400 cursor-grab" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-                                            </svg>
-                                        </div>
-                                        {/* RWD 修改：回答內容區塊。在手機上有上下邊距，在大螢幕上則是左邊框線和左邊距 */}
-                                        <div className="flex-grow p-4 border-t sm:border-t-0 sm:border-l border-gray-200">
-                                            <p className="font-semibold text-gray-700 mb-2">模型回答 {answerIndex + 1}</p>
-                                            <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
-                                                {questions.find(q => q.id === currentQuestion.id).answers[answerIndex]}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    )}
-                                </Draggable>
-                                ))}
-                                {provided.placeholder}
+                    <div className="p-4 sm:p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white mb-12">
+                        <h2 className="text-xl font-bold mb-4 text-gray-800">
+                            <span className="text-gray-600">基本資料</span>
+                        </h2>
+                        <div className="space-y-6 bg-gray-50 p-4 sm:p-6 rounded-md">
+                            <div>
+                                <label className="block font-semibold text-gray-700 mb-1">身分 <span className="text-red-500">*</span></label>
+                                <select
+                                    name="identity"
+                                    className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                    onChange={handleInputChange}
+                                    value={formData.identity}
+                                >
+                                    <option value="">請選擇</option>
+                                    <option value="教師">教師</option>
+                                    <option value="學生">學生</option>
+                                    <option value="職員">職員</option>
+                                    <option value="其他">其他</option>
+                                </select>
                             </div>
-                            )}
-                        </Droppable>
+                            <div>
+                                <label className="block font-semibold text-gray-700 mb-1">生理性別 <span className="text-red-500">*</span></label>
+                                <select
+                                    name="gender"
+                                    className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                    onChange={handleInputChange}
+                                    value={formData.gender}
+                                >
+                                    <option value="">請選擇</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block font-semibold text-gray-700 mb-1">參與時間（年） <span className="text-red-500">*</span></label>
+                                <select
+                                name="participationYear"
+                                className="border border-gray-300 p-2 w-full rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                required
+                                onChange={handleInputChange}
+                                value={formData.participationYear}
+                                >
+                                <option value="">請選擇</option>
+                                {[...Array(10)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1} 年</option>
+                                ))}
+                                </select>
+                            </div>
+                            <div>
+                                <h3 className="block font-semibold text-gray-700 mb-2">您對大型語言模型技術的熟悉程度為： <span className="text-red-500">*</span></h3>
+                                <p className="text-sm text-gray-600 mb-3">
+                                請選擇您對於如 ChatGPT 等大型語言模型技術的熟悉程度（1 = 完全不熟悉，7 = 非常熟悉）
+                                </p>
+                                <div className="flex flex-wrap justify-center gap-2 sm:gap-4 bg-white p-3 rounded-lg border">
+                                {[1, 2, 3, 4, 5, 6, 7].map((val) => (
+                                    <label key={val} className="flex flex-col items-center cursor-pointer p-1 rounded-md hover:bg-gray-100 flex-grow">
+                                    <span className="text-sm text-gray-700 font-medium">{val}</span>
+                                    <input
+                                        type="radio"
+                                        name="llmFamiliarity"
+                                        value={val}
+                                        className="h-5 w-5 mt-1 text-purple-600 focus:ring-purple-500"
+                                        onChange={handleInputChange}
+                                        checked={formData.llmFamiliarity === String(val)}
+                                        required
+                                    />
+                                    </label>
+                                ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    {/* 新增：開始填答按鈕 */}
+                    <div className="mt-10 text-center">
+                      <button 
+                          type="button" // 關鍵：設為 type="button" 才不會觸發 form 的 onSubmit
+                          onClick={handleStartAnswering}
+                          className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300"
+                      >
+                          開始填答
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-                {/* --- 分頁按鈕與提交按鈕 --- */}
-                <div className="mt-10 flex justify-between items-center">
-                    <button 
-                        type="button"
-                        onClick={handlePrev}
-                        disabled={currentQuestionIndex === 0}
-                        className="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                {/* ---------- 步驟二：問題填答頁 ---------- */}
+                {currentStep === 'questions' && (
+                  <>
+                    <div 
+                      key={currentQuestion.id}
+                      className="p-4 sm:p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white animate-fade-in"
                     >
-                        上一頁
-                    </button>
+                        <div className="mb-6">
+                            <p className="text-right text-sm font-semibold text-gray-600">
+                                進度: {currentQuestionIndex + 1} / {questions.length}
+                            </p>
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                                <div 
+                                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+                                    style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
 
-                    {currentQuestionIndex < questions.length - 1 ? (
+                        <div className="mb-4">
+                            <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+                                <span className="text-blue-600">第 {currentQuestionIndex + 1} 題</span>
+                            </h2>
+                            <div className="flex items-start gap-x-3 mt-1">
+                                <span className="text-lg sm:text-xl flex-shrink-0 pt-1">📖</span>
+                                <p className="text-lg sm:text-xl font-bold text-gray-800">
+                                    {currentQuestion.question}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-6 pt-6 border-t border-dashed border-gray-300">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                                請拖曳下方的回答方塊進行排序 (第一名在最上方)
+                            </h3>
+                            
+                            <Droppable droppableId={String(currentQuestion.id)}>
+                                {(provided) => (
+                                <div
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                    className="space-y-4"
+                                >
+                                    {formData.rankings[currentQuestion.id]?.map((answerIndex, rankIndex) => (
+                                    <Draggable key={`${currentQuestion.id}-${answerIndex}`} draggableId={`${currentQuestion.id}-${answerIndex}`} index={rankIndex}>
+                                        {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            className={`border rounded-lg flex flex-col sm:flex-row items-stretch overflow-hidden transition-shadow ${snapshot.isDragging ? 'shadow-2xl bg-blue-50' : 'bg-white shadow-sm'}`}
+                                        >
+                                            <div className="w-full sm:w-24 flex-shrink-0 flex flex-row sm:flex-col items-center justify-between sm:justify-center p-3 bg-gray-50 sm:p-4">
+                                                <span className="text-lg font-bold text-blue-600">第 {rankIndex + 1} 名</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400 cursor-grab sm:mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                                                </svg>
+                                            </div>
+                                            <div className="flex-grow p-4 border-t sm:border-t-0 sm:border-l border-gray-200">
+                                                <p className="font-semibold text-gray-700 mb-2">模型回答 {answerIndex + 1}</p>
+                                                <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                                                    {questions.find(q => q.id === currentQuestion.id).answers[answerIndex]}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        )}
+                                    </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                                )}
+                            </Droppable>
+                        </div>
+                    </div>
+
+                    <div className="mt-10 flex justify-between items-center">
                         <button 
                             type="button"
-                            onClick={handleNext}
-                            className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+                            onClick={handlePrevQuestion}
+                            disabled={currentQuestionIndex === 0}
+                            className="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
                         >
-                            下一頁
+                            上一頁
                         </button>
-                    ) : (
-                        <div>
+
+                        {currentQuestionIndex < questions.length - 1 ? (
                             <button 
-                                type="submit" 
+                                type="button"
+                                onClick={handleNextQuestion}
+                                className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                下一頁
+                            </button>
+                        ) : (
+                            <button 
+                                type="submit" // 只有這個按鈕是 type="submit"
                                 className="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? '提交中...' : '提交問卷'}
                             </button>
-                        </div>
+                        )}
+                    </div>
+                     {currentQuestionIndex === questions.length - 1 && (
+                        <p className="mt-4 text-sm text-gray-500 text-center">
+                            由於伺服器免費方案限制，初次提交可能需要約 30-50 秒喚醒後端服務，請耐心等候，感謝您的理解！
+                        </p>
                     )}
-                </div>
-                 {currentQuestionIndex === questions.length - 1 && (
-                    <p className="mt-4 text-sm text-gray-500 text-center">
-                        由於伺服器免費方案限制，初次提交可能需要約 30-50 秒喚醒後端服務，請耐心等候，感謝您的理解！
-                    </p>
+                  </>
                 )}
+
             </form>
         </div>
     </DragDropContext>
