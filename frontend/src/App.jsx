@@ -334,7 +334,6 @@ export default function BlindTestForm() {
                                 <option value="">請選擇</option>
                                 <option value="男">男</option>
                                 <option value="女">女</option>
-                                <option value="其他">其他</option>
                             </select>
                         </div>
                         <div>
