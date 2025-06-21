@@ -11,27 +11,19 @@ https://form-frontend-u3x9.onrender.com/
 
 ## 📌 資料表結構
 
-### respondents（填寫者資訊）
+## 📝 問卷資料表欄位說明（拖曳排序版本）
 
-| 欄位名稱      | 型別         | 說明       |
-|---------------|--------------|------------|
-| id            | SERIAL       | 主鍵，自動編號 |
-| name          | TEXT         | 填寫者姓名 |
-| gender        | TEXT         | 性別       |
-| education     | TEXT         | 教育程度   |
-| created_at    | TIMESTAMP    | 填寫時間（預設為當前時間） |
-
-### answers（問卷回答）
-
-| 欄位名稱           | 型別      | 說明 |
-|--------------------|-----------|------|
-| id                 | SERIAL    | 主鍵 |
-| respondent_id      | INTEGER   | 對應 respondents.id |
-| question_id        | INTEGER   | 問題編號 |
-| model_answer_index | INTEGER   | 第幾個模型回答（0,1,2） |
-| accuracy           | INTEGER   | 準確性評分 |
-| completeness       | INTEGER   | 完整性評分 |
-| is_preferred       | BOOLEAN   | 是否為偏好答案 |
+| 欄位名稱             | 資料型別 | 說明                                  |
+|----------------------|----------|---------------------------------------|
+| 填答者ID             | INTEGER  | respondents 表主鍵 ID                 |
+| 身分                 | TEXT     | 使用者身分（教師、學生、職員等）     |
+| 性別                 | TEXT     | 使用者性別                            |
+| 參與年資             | TEXT     | 使用者參與 USR 計畫的年度            |
+| LLM熟悉度            | INTEGER  | 使用者對大型語言模型的熟悉程度（1~7）|
+| 問題ID               | INTEGER  | 問卷中的題目編號                      |
+| 模型回答             | INTEGER  | 第幾個模型的回答（1 表示模型 1）     |
+| 名次                 | INTEGER  | 受測者對該回答的排序名次（1~3）       |
+| 填答時間             | DATETIME | 表單實際填寫時間                      |
 
 ---
 
