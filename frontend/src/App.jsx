@@ -13,7 +13,7 @@ const createInitialRankings = (questions) => {
 };
 
 export default function BlindTestForm() {
-  // 完整的問卷題目資料 (保持不變)
+  // 完整的問卷題目資料 (內容過長，此處省略以保持清晰)
   const questions = [
     {
       id: 1,
@@ -220,11 +220,13 @@ export default function BlindTestForm() {
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
+      window.scrollTo(0, 0); // *** 新增：換頁時滾動到頁面頂部 ***
     }
   };
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
+      window.scrollTo(0, 0); // *** 新增：換頁時滾動到頁面頂部 ***
     }
   };
 
@@ -249,6 +251,7 @@ export default function BlindTestForm() {
         rankings: createInitialRankings(questions) 
       });
       setCurrentQuestionIndex(0); // 提交後回到第一頁
+      window.scrollTo(0, 0); // *** 新增：提交後滾動到頁面頂部 ***
     } catch (error) {
       console.error('提交失敗:', error);
       if (error.response) {
@@ -269,18 +272,21 @@ export default function BlindTestForm() {
   return (
     // DragDropContext 必須在最外層
     <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
+        {/* RWD 修改：在手機上使用較小的 p-4，在 sm (640px) 以上的螢幕才用 p-6 */}
+        <div className="p-4 sm:p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg my-8">
             <form onSubmit={handleSubmit}>
                 
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
+                    {/* RWD 修改：手機上字體 text-2xl，大螢幕 text-3xl */}
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">模型回答盲測評估問卷</h1>
                     <p className="text-gray-600 mt-2">
                         請依據每題所附的三段回答，將您認為最優的回答進行排序1-3名。
                     </p>
                 </div>
 
-                <div className="mb-10 p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
+                <div className="mb-10 p-4 sm:p-6 border-l-4 border-teal-500 bg-teal-50 rounded-lg shadow-sm">
+                    {/* RWD 修改：手機上字體 text-xl，大螢幕 text-2xl */}
+                    <h2 className="text-xl sm:text-2xl font-bold text-teal-800 mb-4">問卷說明</h2>
                     <p className="text-gray-700 mb-3 leading-relaxed">
                         本問卷旨在評估人工智慧語言模型所生成回答的品質。每一題將呈現三個不同的答案，請您依據自身參與空污USR（大學社會責任）相關行動或專案的經驗，<span className="text-red-600 font-bold">將三個答案以拖曳的方法進行排名順序</span>。
                     </p>
@@ -301,11 +307,11 @@ export default function BlindTestForm() {
                 </div>
                 
                 {/* 基本資料區塊，這裡設定為總是顯示 */}
-                <div className="p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white mb-12">
+                <div className="p-4 sm:p-6 border-t-4 border-gray-400 rounded-lg shadow-sm bg-white mb-12">
                     <h2 className="text-xl font-bold mb-4 text-gray-800">
                         <span className="text-gray-600">基本資料</span>
                     </h2>
-                    <div className="space-y-6 bg-gray-50 p-6 rounded-md">
+                    <div className="space-y-6 bg-gray-50 p-4 sm:p-6 rounded-md">
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">身分</label>
                             <select
@@ -356,9 +362,10 @@ export default function BlindTestForm() {
                             <p className="text-sm text-gray-600 mb-3">
                             請選擇您對於如 ChatGPT 等大型語言模型技術的熟悉程度（1 = 完全不熟悉，7 = 非常熟悉）
                             </p>
-                            <div className="flex justify-between items-center space-x-2 bg-white p-3 rounded-lg border">
+                            {/* RWD 修改：這是主要修改點。使用 flex-wrap 讓按鈕在手機上可以換行，並用 gap 取代 space-x */}
+                            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 bg-white p-3 rounded-lg border">
                             {[1, 2, 3, 4, 5, 6, 7].map((val) => (
-                                <label key={val} className="flex flex-col items-center cursor-pointer p-1 rounded-md hover:bg-gray-100">
+                                <label key={val} className="flex flex-col items-center cursor-pointer p-1 rounded-md hover:bg-gray-100 flex-grow">
                                 <span className="text-sm text-gray-700 font-medium">{val}</span>
                                 <input
                                     type="radio"
@@ -377,8 +384,12 @@ export default function BlindTestForm() {
                 </div>
 
                 {/* --- 分頁後的問卷題目區塊 --- */}
-                <div className="p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white">
-                    {/* *** 新增：進度條 *** */}
+                {/* RWD 修改：加上 key 來觸發動畫，並調整內外邊距 */}
+                <div 
+                  key={currentQuestion.id}
+                  className="p-4 sm:p-6 border-t-4 border-blue-500 rounded-lg shadow-sm bg-white animate-fade-in"
+                >
+                    {/* *** 進度條 *** */}
                     <div className="mb-6">
                         <p className="text-right text-sm font-semibold text-gray-600">
                             進度: {currentQuestionIndex + 1} / {questions.length}
@@ -392,12 +403,13 @@ export default function BlindTestForm() {
                     </div>
 
                     <div className="mb-4">
-                        <h2 className="text-xl font-bold text-gray-800">
+                        {/* RWD 修改：手機上字體 text-lg，大螢幕 text-xl */}
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800">
                             <span className="text-blue-600">第 {currentQuestionIndex + 1} 題</span>
                         </h2>
-                        <div className="flex items-start gap-x-2 mt-1">
-                            <span className="text-xl flex-shrink-0">📖</span>
-                            <p className="text-xl font-bold text-gray-800">
+                        <div className="flex items-start gap-x-3 mt-1">
+                            <span className="text-lg sm:text-xl flex-shrink-0 pt-1">📖</span>
+                            <p className="text-lg sm:text-xl font-bold text-gray-800">
                                 {currentQuestion.question}
                             </p>
                         </div>
@@ -418,19 +430,22 @@ export default function BlindTestForm() {
                                 {formData.rankings[currentQuestion.id]?.map((answerIndex, rankIndex) => (
                                 <Draggable key={`${currentQuestion.id}-${answerIndex}`} draggableId={`${currentQuestion.id}-${answerIndex}`} index={rankIndex}>
                                     {(provided, snapshot) => (
+                                    // RWD 修改：這是第二個主要修改點。預設是 flex-col (上下堆疊)，在 sm 以上螢幕變為 flex-row (左右並排)
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className={`p-4 border rounded-lg flex items-start gap-x-4 transition-shadow ${snapshot.isDragging ? 'shadow-2xl bg-blue-50' : 'bg-gray-50 shadow-sm'}`}
+                                        className={`border rounded-lg flex flex-col sm:flex-row items-stretch transition-shadow ${snapshot.isDragging ? 'shadow-2xl bg-blue-50' : 'bg-gray-50 shadow-sm'}`}
                                     >
-                                        <div className="flex-shrink-0 flex flex-col items-center justify-center w-20">
+                                        {/* RWD 修改：名次區塊。在手機上與拖曳圖示左右並排，在大螢幕上則上下堆疊 */}
+                                        <div className="flex-shrink-0 w-full sm:w-20 flex flex-row sm:flex-col items-center justify-between sm:justify-center p-3 sm:p-4 bg-gray-100 sm:bg-transparent rounded-t-lg sm:rounded-l-lg sm:rounded-t-none">
                                             <span className="text-lg font-bold text-blue-600">第 {rankIndex + 1} 名</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400 mt-2 cursor-grab" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400 cursor-grab" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
                                             </svg>
                                         </div>
-                                        <div className="flex-grow border-l border-gray-200 pl-4">
+                                        {/* RWD 修改：回答內容區塊。在手機上有上下邊距，在大螢幕上則是左邊框線和左邊距 */}
+                                        <div className="flex-grow p-4 border-t sm:border-t-0 sm:border-l border-gray-200">
                                             <p className="font-semibold text-gray-700 mb-2">模型回答 {answerIndex + 1}</p>
                                             <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
                                                 {questions.find(q => q.id === currentQuestion.id).answers[answerIndex]}
