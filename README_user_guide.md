@@ -29,6 +29,16 @@ https://form-frontend-u3x9.onrender.com/
 
 ## 📄 常用 SQL 查詢語法
 
+### 查詢填寫人數
+```sql
+SELECT 
+    COUNT(DISTINCT r.id) AS 填答者人數
+FROM 
+    respondents r
+JOIN 
+    rankings k ON r.id = k.respondent_id;
+```
+
 ### ✅ ✨最主要查詢個模型排名總表
 
 ```sql
