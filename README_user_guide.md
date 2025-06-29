@@ -29,6 +29,17 @@ https://form-frontend-u3x9.onrender.com/
 
 ## 📄 常用 SQL 查詢語法
 
+### 查詢個模型獲得第一名的次數
+```sql
+SELECT 
+    model_answer_index,
+    COUNT(*) AS first_place_count
+FROM rankings
+WHERE rank = 1
+GROUP BY model_answer_index
+ORDER BY first_place_count DESC;
+```
+
 ### 查詢填寫人數
 ```sql
 SELECT 
